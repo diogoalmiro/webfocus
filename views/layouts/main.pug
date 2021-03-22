@@ -1,0 +1,26 @@
+
+doctype html
+html.h-100
+  head 
+    include head.pug
+    include bootstrap.pug
+
+    block head
+  
+  body.d-flex.flex-column.h-100
+    
+    nav.navbar.navbar-expand.align-items-end
+      div.navbar-header.nav-tabs: div.navbar-brand
+        h3 Webfocus
+        h6= configuration['project-name']
+      ul.nav.nav-tabs.w-100
+
+        mixin nava(path)
+          - let klass = path == req.params.view ? 'nav-link active' : 'nav-link'
+          li.nav-item: a(href='/'+path, class=klass)= path
+        - for(let path of configuration.components)
+          +nava(path)
+    main.container
+      block main
+    footer.mt-auto
+      div.footer.px-5.pt-2.mt-3.bg-danger Footer
