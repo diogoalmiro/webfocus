@@ -16,7 +16,8 @@ html.h-100
       ul.nav.nav-tabs.w-100
 
         mixin nava(path)
-          - let klass = path == req.params.view ? 'nav-link active' : 'nav-link'
+          - let view = req.params ? req.params.view : undefined;
+          - let klass = path == view ? 'nav-link active' : 'nav-link'
           li.nav-item: a(href='/'+path, class=klass)= path
         - for(let path of configuration.components)
           +nava(path)

@@ -1,28 +1,36 @@
 const express = require('express');
 const pug = require('pug');
+const path = require('path');
 const debug = require('debug')('webfocus:app');
-const packageJSON = require('./package.json');
 
 class WebfocusAppError extends Error{}
 
 class WebfocusApp {
     constructor(){
+        this.configuration = {};
         this.components = {};
+        this.started = false;
         this.api = express.Router();
         let app = this.app = express();
 
         app.set('json spaces', 2);
         app.set('view engine', 'pug');
-
+        app.set('views', path.join(__dirname,'views'))
 
         app.use('/api', express.json({strict : false}), this.api);
+    }
 
+    setConfiguration(obj){
+        if( this.started ) throw new WebfocusAppError("Method setConfiguration cannot be called after method start was called");
+        this.configuration = obj;
     }
 
     start(){
+        if( this.started ) throw new WebfocusAppError("Method start can only be called once on the same instance");
+        this.started = true;
         this.pugObj = (req) => {
             let obj = { req };
-            obj.configuration = packageJSON;
+            obj.configuration = this.configuration;
             obj.configuration.components = this.getAllComponentNames();
             return obj;
         }
@@ -38,17 +46,15 @@ class WebfocusApp {
             res.render('layouts/index', this.pugObj(req));
         })
         
-        this.app.use('/:view', (req, res, next) => {
+        this.app.use('^/:view([^\/]+)$', (req, res, next) => {
             try{
                 let pugRouter = this.getComponentRouter(req.params.view);
                 let pugObj = this.pugObj(req);
-                console.log(pugRouter)
-                console.log(pugObj)
                 res.send(pugRouter(pugObj))
             }
             catch(e){
                 if( e instanceof WebfocusAppError ){                    
-                    debug(req.params.view)
+                    debug("WEBAPPERROR %s", req.params.view)
                     next();
                 }
                 else{
@@ -58,8 +64,7 @@ class WebfocusApp {
                 }
             }
         })
-
-        this.app.use(express.static('static'));
+        this.app.use(express.static(path.join(__dirname, 'static')));
 
         this.app.use((req, res, next) => { // Not found handling
             res.status(404).render('layouts/error', this.pugObj({req, error: `Not found ${req.path}`}));
@@ -69,7 +74,7 @@ class WebfocusApp {
             res.status(500).render('layouts/error', this.pugObj({req, error:err}));
         })
 
-        let server = this.app.listen(packageJSON.port, () => {
+        let server = this.app.listen(this.configuration.port, () => {
             debug("Server listenning on port %s", server.address().port);
         })
     }
