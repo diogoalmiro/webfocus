@@ -1,17 +1,22 @@
 {
-  "name": "webfocus-app",
-  "version": "1.0.0",
-  "description": "",
+  "name": "@webfocus/app",
+  "version": "0.0.1",
+  "description": "Main webfocus generic application. Allows the creation of specific applications given some requirements.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "diogoalmiro",
+  "license": "MIT",
   "dependencies": {
+    "@webfocus/component": "git@git.rnl.tecnico.ulisboa.pt:webfocus/component.git",
     "express": "^4.17.1",
     "pug": "^3.0.2"
   },
-  "port" : 8000
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@git.rnl.tecnico.ulisboa.pt:webfocus/app.git"
+  }
 }

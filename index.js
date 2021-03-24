@@ -2,12 +2,16 @@ const express = require('express');
 const pug = require('pug');
 const path = require('path');
 const debug = require('debug')('webfocus:app');
+const isComponent = require("@webfocus/component").isComponent;
 
 class WebfocusAppError extends Error{}
 
 class WebfocusApp {
-    constructor(){
-        this.configuration = {};
+    constructor(configuration={port: 8000, name: "Name not provided"}){
+        this.configuration = {
+            components : [],
+            ...configuration
+        };
         this.components = {};
         this.started = false;
         this.api = express.Router();
@@ -18,48 +22,50 @@ class WebfocusApp {
         app.set('views', path.join(__dirname,'views'))
 
         app.use('/api', express.json({strict : false}), this.api);
-    }
 
-    setConfiguration(obj){
-        if( this.started ) throw new WebfocusAppError("Method setConfiguration cannot be called after method start was called");
-        this.configuration = obj;
+        this.api.get("^/$", (req, res, next) => {
+            debug("Route Api Handler")
+            res.json(this.getAllComponentNames())
+        })
     }
 
     start(){
         if( this.started ) throw new WebfocusAppError("Method start can only be called once on the same instance");
         this.started = true;
-        this.pugObj = (req) => {
-            let obj = { req };
+        Object.freeze(this.configuration)
+        this.pugObj = (objs) => {
+            let obj = { ...objs };
             obj.configuration = this.configuration;
-            obj.configuration.components = this.getAllComponentNames();
             return obj;
         }
         this.api.use((req, res, next) => {
+            debug("Not Found Api Handler");
             res.status(404).json({error: `API Endpoint ${req.path} not found.`})
         })
 
         this.api.use((err, req, res, next) => {
+            debug("Error Api Handler: %s", err.message);
             res.status(500).json({error: err.message})
         })
 
         this.app.use('^/$', (req, res, next) => {
-            res.render('layouts/index', this.pugObj(req));
+            debug("Route App Handler")
+            res.render('layouts/index', this.pugObj({req}));
         })
         
         this.app.use('^/:view([^\/]+)$', (req, res, next) => {
+            debug("View Handler (%s)", req.params.view)
             try{
                 let pugRouter = this.getComponentRouter(req.params.view);
-                let pugObj = this.pugObj(req);
-                res.send(pugRouter(pugObj))
+                res.send(pugRouter(this.pugObj({req})));
             }
             catch(e){
                 if( e instanceof WebfocusAppError ){                    
-                    debug("WEBAPPERROR %s", req.params.view)
+                    debug("    WebfocusAppError");
                     next();
                 }
                 else{
-                    console.log(e.stack)
-                    debug("ERROR %s",req.params.view)
+                    debug("    Unexpected Error: %s",e.message);
                     next(e);
                 }
             }
@@ -67,31 +73,29 @@ class WebfocusApp {
         this.app.use(express.static(path.join(__dirname, 'static')));
 
         this.app.use((req, res, next) => { // Not found handling
+            debug("Not Found Handler (%s)", req.path);
             res.status(404).render('layouts/error', this.pugObj({req, error: `Not found ${req.path}`}));
         })
         
         this.app.use((err, req, res, next) => { // Internal error handling
-            res.status(500).render('layouts/error', this.pugObj({req, error:err}));
+            debug("Error Handler (%s)", req.path);
+            res.status(500).render('layouts/error', this.pugObj({req, error:err.message}));
         })
 
         let server = this.app.listen(this.configuration.port, () => {
             debug("Server listenning on port %s", server.address().port);
         })
     }
-
-    registerComponent(name, router){
-        if( !name || typeof name !== 'string' || name.length == 0 ){
-            throw new WebfocusAppError("Invalid argument \"name\" must be a string with length > 0");
+    
+    registerComponent(name, component){
+        if( !isComponent(component) ){
+            throw new WebfocusAppError(`Trying to register the component "${name}" that is not a @webfocus/component component.`)
         }
-        if( !router ){
-            throw new WebfocusAppError("Invalid argument \"router\" must be a express middleware");
-        }
-        if( name in this.components ){
-            throw new WebfocusAppError("Component Already Registered");
-        }
-        this.api.use(name, router);
-        let pugRouter = pug.compileFile(router.__dirname+'/index.pug', {basedir:this.app.get('views')})
+        component.setConfiguration(this.configuration);
+        this.api.use(`/${name}`, component.app);
+        let pugRouter = pug.compileFile(path.join(component.dirname, '/index.pug'), {basedir:this.app.get('views')})
         this.components[name] = pugRouter;
+        this.configuration.components.push(name);
     }
 
     getComponentRouter(name){
@@ -110,4 +114,4 @@ class WebfocusApp {
     }
 } 
 
-module.exports = new WebfocusApp();
+module.exports = WebfocusApp;

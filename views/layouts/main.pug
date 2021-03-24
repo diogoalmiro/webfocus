@@ -8,16 +8,13 @@ html.h-100
     block head
   
   body.d-flex.flex-column.h-100
-    
     nav.navbar.navbar-expand.align-items-end
       div.navbar-header.nav-tabs: div.navbar-brand
         h3 Webfocus
-        h6= configuration['project-name']
+        h6= configuration['name']
       ul.nav.nav-tabs.w-100
-
-        mixin nava(path)
-          - let view = req.params ? req.params.view : undefined;
-          - let klass = path == view ? 'nav-link active' : 'nav-link'
+        mixin nava(path) 
+          - let klass = req.params?.view == path ? 'nav-link active' : 'nav-link'
           li.nav-item: a(href='/'+path, class=klass)= path
         - for(let path of configuration.components)
           +nava(path)
