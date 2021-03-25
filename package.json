@@ -10,11 +10,10 @@
   "author": "diogoalmiro",
   "license": "MIT",
   "dependencies": {
-    "@webfocus/component": "git@git.rnl.tecnico.ulisboa.pt:webfocus/component.git",
+    "@webfocus/component": "git+ssh://git@git.rnl.tecnico.ulisboa.pt:webfocus/component.git",
     "express": "^4.17.1",
     "pug": "^3.0.2"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git@git.rnl.tecnico.ulisboa.pt:webfocus/app.git"
