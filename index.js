@@ -2,7 +2,7 @@ const express = require('express');
 const pug = require('pug');
 const path = require('path');
 const debug = require('debug')('webfocus:app');
-const isComponent = require("@webfocus/component").isComponent;
+const WebfocusComponent = require("@webfocus/component").WebfocusComponent;
 
 class WebfocusAppError extends Error{}
 
@@ -88,10 +88,11 @@ class WebfocusApp {
     }
     
     registerComponent(name, component){
-        if( !isComponent(component) ){
+        debug("Registering component \"%s\"", name);
+        if( !component instanceof WebfocusComponent ){
             throw new WebfocusAppError(`Trying to register the component "${name}" that is not a @webfocus/component component.`)
         }
-        component.setConfiguration(this.configuration);
+        component.configuration = this.configuration;
         this.api.use(`/${name}`, component.app);
         let pugRouter = pug.compileFile(path.join(component.dirname, '/index.pug'), {basedir:this.app.get('views')})
         this.components[name] = pugRouter;
