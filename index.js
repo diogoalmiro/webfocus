@@ -147,12 +147,14 @@ class WebfocusApp {
             res.render(path.join(component.dirname, subpath), pObj, (err, html) => {
                 if( err ){
                     if( subpath == "/index" ){
+                        component.debug("Error at component %s - index.pug: %s", name, err.message )
                         next(err);
                     }
                     else{
-
+                        component.debug("Component specific view not found or with errors, trying  index.pug of %s", name)
+                        component.debug("%O", err)
+                        res.render(path.join(component.dirname, 'index'), pObj);
                     }
-                    res.render(path.join(component.dirname, 'index'), pObj);
                 }
                 else{
                     res.send(html);
@@ -161,10 +163,7 @@ class WebfocusApp {
         })
     }
 
-    getComponentRouter(name){
-        if( !name || typeof name !== 'string' || name.length == 0 ){
-            throw new WebfocusAppError("Invalid argument \"name\" must be a string with length > 0");
-        }
+    getComponent(name){
         let r = this.components[name];
         if( !r ){
             throw new WebfocusAppError(`Component \"${name}\"not regitered`);
