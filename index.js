@@ -99,12 +99,12 @@ class WebfocusApp {
         // Serve static files under the static folder
         this.app.use(express.static(path.join(__dirname, 'static')));
 
-        this.app.get((req, res, next) => { // Not found handling
+        this.app.get("*", (req, res, next) => { // Not found handling
             debug("Not Found Handler (%s)", req.path);
             res.status(404).render('layouts/error', this.#pugObj({req, error: `Not found ${req.path}`}));
         })
 
-        this.app.all((req, res, next) => { // Method Not Allowed handling
+        this.app.all("*", (req, res, next) => { // Method Not Allowed handling
             res.status(400).render(`layouts/error`, this.#pugObj({req, error: `Method not allowed (${req.method})`}));
         })
         
