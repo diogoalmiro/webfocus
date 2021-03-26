@@ -113,7 +113,7 @@ class WebfocusApp {
         
         this.app.use((err, req, res, next) => { // Internal error handling
             debug("Error Handler (%s)", req.path);
-            res.status(500).render('layouts/error', this.#pugObj({req, error:err.message}));
+            res.status(500).render('layouts/error', this.#pugObj({req, error:err.message, stack: err.stack}));
         })
 
         let server = this.app.listen(this.configuration.port, () => {
@@ -147,13 +147,16 @@ class WebfocusApp {
             res.render(path.join(component.dirname, subpath), pObj, (err, html) => {
                 if( err ){
                     if( subpath == "/index" ){
-                        component.debug("Error at component %s - index.pug: %s", name, err.message )
+                        component.debug("Error at - index.pug: %s", err.message )
                         next(err);
                     }
-                    else{
-                        component.debug("Component specific view not found or with errors, trying  index.pug of %s", name)
-                        component.debug("%O", err)
+                    else if( err.message.indexOf("Failed to lookup") >= 0 ){
+                        component.debug("Component specific view does not exit, using index.pug");
                         res.render(path.join(component.dirname, 'index'), pObj);
+                    }
+                    else{
+                        component.debug("Error at - %s.pug: %s", subpath, err.message);
+                        next(err);
                     }
                 }
                 else{
