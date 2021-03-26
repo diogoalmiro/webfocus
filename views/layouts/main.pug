@@ -8,17 +8,21 @@ html.h-100
     block head
   
   body.d-flex.flex-column.h-100
-    nav.navbar.navbar-expand.align-items-end
-      div.navbar-header.nav-tabs: div.navbar-brand
-        h3 Webfocus
-        h6= configuration.name
-      ul.nav.nav-tabs.w-100
-        mixin nava(path) 
-          - let klass = req.path.indexOf(`/${path}`) === 0 ? 'nav-link active' : 'nav-link'
-          li.nav-item: a(href=`/${path}/`, class=klass)= path
-        - for(let path of configuration.components)
-          +nava(path)
-    main.container
+    nav.navbar.navbar-expand-md.navbar-light
+      div.container
+        div.navbar-brand.d-flex.flex-column
+          h3 Webfocus
+          h6= configuration.name
+        button.navbar-toggler(type="button",data-bs-toggle="collapse",data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
+          span.navbar-toggler-icon
+        div#navbar.collapse.navbar-collapse
+          ul.navbar-nav.me-auto.mb-2
+            mixin nava(path) 
+              - let klass = req.path.indexOf(`/${path}`) === 0 ? 'nav-link active' : 'nav-link'
+              li.nav-item: a(href=`/${path}/`, class=klass)= path
+            - for(let path of configuration.components)
+              +nava(path)
+    main.container.my-2
       block main
     footer.mt-auto
-      div.footer.px-5.pt-2.mt-3 Diogo Almiro 2021
+      div.container Diogo Almiro 2021
