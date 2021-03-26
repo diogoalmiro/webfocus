@@ -49,7 +49,10 @@ class WebfocusApp {
         
         // Main express api middleware
         this.api = express.Router();
-        app.use('/api', express.json({strict : false}), this.api);
+        // Enable JSON and HTTP-form-submit communication
+        // Warning: Does *NOT* enable file uploading (multipart/form-data)
+        //          use mutler (see https://github.com/expressjs/multer) on specific components.
+        app.use("/api", [express.json({strict : false}), express.urlencoded({extended: true}), this.api])
         
         // Express initial handlers
         this.api.get("^/$", (req, res, next) => {
