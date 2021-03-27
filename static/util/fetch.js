@@ -12,12 +12,7 @@ function requestJSON(url, method, obj){
         headers['Content-Lenght'] = body.length
     }
 
-    return fetch(url, {method,headers,body}).then( res => {
-        if( res.ok ) {
-            return res.json();
-        }
-        throw new Error(`HTTP error! status: ${res.status}`); 
-    })
+    return fetch(url, {method,headers,body}).then( res => res.json() )
 }
 
 function getJSON( url ){
@@ -35,3 +30,20 @@ function postJSONmap(url,obj,map){
 function getJSONmap(url, map){
     return getJSON(url).then(elems => elems.map(map))
 }
+
+window.addEventListener("submit", async e => {
+    // e.target form submited
+    // e.submitter button pressed to submit
+    let form = e.target;
+    if(!form.dataset.submitCb) return;
+    if( form.disabled ){
+        return;
+    }
+    form.disabled = true;
+    e.preventDefault();
+
+    const data = new FormData(form);
+    const value = Object.fromEntries(data.entries());
+    
+    requestJSON(form.getAttribute("action"), form.getAttribute("method"), value).then(_ => form.disabled = false).then( window[form.dataset.submitCb] )
+})
