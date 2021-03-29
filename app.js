@@ -29,11 +29,20 @@ class WebfocusApp {
     constructor(configuration={port: 8000, name: "App Name"}){
         debug("constructor");
         // Configuration checks
-        if( !"port" in configuration ){
+        if( !("port" in configuration) ){
             throw new WebfocusAppError(`Constructor requires an object with a "port" key`);
         }
-        if( !"name" in configuration ){port
+        
+        if( !Number.isSafeInteger(configuration.port) || configuration.port < 0 || configuration.port > 65535 ){
+            throw new WebfocusAppError(`Invalid port value provided (${configuration.port})`);
+        }
+
+        if( !("name" in configuration) ){
             throw new WebfocusAppError(`Constructor requires an object with a "name" key`);
+        }
+
+        if( (typeof configuration.name !== 'string') && !(configuration.name instanceof String) ){
+            throw new WebfocusAppError(`Invalid name value provided (${configuration.name})`);
         }
 
         // Class properties
@@ -65,7 +74,7 @@ class WebfocusApp {
         })
         app.get('^/$', (req, res, next) => {
             debug("Route App Handler")
-            res.render('layouts/index', this.#pugObj({req}));
+            res.render('layouts/index', this.pugObj({req}));
         })
 
     }
@@ -74,7 +83,7 @@ class WebfocusApp {
      * Creates an object 
      * @param {*} objs 
      */
-    #pugObj(objs){
+    pugObj(objs){
         let obj = { ...objs };
         obj.configuration = this.configuration;
         return obj;
@@ -108,16 +117,16 @@ class WebfocusApp {
 
         this.app.get("*", (req, res, next) => { // Not found handling
             debug("Not Found Handler (%s)", req.path);
-            res.status(404).render('layouts/error', this.#pugObj({req, error: `Not found ${req.path}`}));
+            res.status(404).render('layouts/error', this.pugObj({req, error: `Not found ${req.path}`}));
         })
 
         this.app.all("*", (req, res, next) => { // Method Not Allowed handling
-            res.status(400).render(`layouts/error`, this.#pugObj({req, error: `Method not allowed (${req.method})`}));
+            res.status(400).render(`layouts/error`, this.pugObj({req, error: `Method not allowed (${req.method})`}));
         })
         
         this.app.use((err, req, res, next) => { // Internal error handling
             debug("Error Handler (%s)", req.path);
-            res.status(500).render('layouts/error', this.#pugObj({req, error:err.message, stack: err.stack}));
+            res.status(500).render('layouts/error', this.pugObj({req, error:err.message, stack: err.stack}));
         })
 
         let server = this.app.listen(this.configuration.port, () => {
@@ -147,7 +156,7 @@ class WebfocusApp {
                 subpath += "index";
             }
             component.debug("Get handler (%s) %s", subpath, req.path);
-            let pObj = this.#pugObj({apibaseurl: `/api/${name}/`, req, basedir: this.app.get('views')});
+            let pObj = this.pugObj({apibaseurl: `/api/${name}/`, req, basedir: this.app.get('views')});
             res.render(path.join(component.dirname, subpath), pObj, (err, html) => {
                 if( err ){
                     if( subpath == "/index" ){
