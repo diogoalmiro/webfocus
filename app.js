@@ -148,6 +148,7 @@ class WebfocusApp {
         this.components[name] = component;
         this.configuration.components.push(name);
         this.api.use(`/${name}`, component.app);
+        this.app.use(`/${name}`, express.static(component.dirname));
         this.app.get(`/${name}/:subpath(*)?`, (req, res, next) => {
             let subpath = path.join("/", req.params.subpath || "");
             if( subpath.endsWith("/") ){
@@ -175,7 +176,6 @@ class WebfocusApp {
                 }
             })
         })
-        this.app.use(`/${name}`, express.static(component.dirname));
     }
 
     getComponent(name){
