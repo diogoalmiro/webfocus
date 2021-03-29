@@ -2,11 +2,9 @@
  * WebfocusComponent module.
  * @module component
  */
-
 const express = require("express");
 const debug = require("debug");
 const path = require("path");
-const { assert, dir } = require("console");
 
 const EMPTY = new Object(); 
 

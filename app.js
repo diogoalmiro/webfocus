@@ -177,6 +177,7 @@ class WebfocusApp {
                 }
             })
         })
+        this.app.use(`/${name}`, express.static(component.dirname));
     }
 
     getComponent(name){
