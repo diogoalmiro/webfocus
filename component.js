@@ -1,22 +1,46 @@
 const express = require("express");
 const debug = require("debug");
+const path = require("path");
+const { assert, dir } = require("console");
 
 const EMPTY = new Object(); 
 
+/**
+ * Class representing internal component Errors 
+ */
 class WebfocusComponentError extends Error {}
 
+/**
+ * Class representing a component.
+ * 
+ */
 class WebfocusComponent {
     #_configuration = EMPTY;
     #_onConfigurationReady = () => {};
-    constructor(name, description, dirname){
+
+    /**
+     * Creates an instance of WebfocusComponent.
+     * dirname property will be set to the directory where the constructor was called.
+     * @param {String} name - Display name of the component.
+     * @param {String} description - Description.
+     */
+    constructor(name, description){
         this.app = express.Router();
         this.name = name;
         this.description = description;
-        this.dirname = dirname;
+        // https://github.com/detrohutt/caller-dirname/blob/master/src/index.ts
+        const _ = Error.prepareStackTrace;
+        Error.prepareStackTrace = (_, stack) => stack;
+        this.dirname = path.dirname(new Error().stack.find(s => s.getFileName() != __filename).getFileName());
+        Error.prepareStackTrace = _;
         this.debug = debug(`webfocus:component:${name}`)
         this.onConfigurationReady = (cb=()=>{}) => {this.#_onConfigurationReady = cb}
     }
 
+    /**
+     * Sets the configuration object.
+     * @throws WebfocusComponentError when setting the configuration more than once.
+     */
     set configuration(configuration){
         if( this.#_configuration === EMPTY ){
             this.#_configuration = configuration;
@@ -27,6 +51,9 @@ class WebfocusComponent {
         }
     }
 
+    /**
+     * Returns a read-only configuration. This configuration can only be access after the onConfigurationReady function is called.
+     */
     get configuration(){
         let self = this;
         return new Proxy(EMPTY, {
