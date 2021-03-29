@@ -169,7 +169,7 @@ class WebfocusApp {
     getComponent(name){
         let r = this.components[name];
         if( !r ){
-            throw new WebfocusAppError(`Component \"${name}\"not regitered`);
+            throw new WebfocusAppError(`Component "${name}" not regitered`);
         }
         return r;
     }

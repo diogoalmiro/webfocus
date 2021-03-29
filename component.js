@@ -31,11 +31,11 @@ class WebfocusComponent {
         let self = this;
         return new Proxy(EMPTY, {
             set: function(){
-                throw new WebfocusComponentError(`Attempting to override value on "${this.name}" component's configuration.`)
+                throw new WebfocusComponentError(`Attempting to override value on ${self.name} component's configuration.`)
             },
             get: function(_, prop){
                 if( self.#_configuration === EMPTY ){
-                    throw new WebfocusComponentError(`Attempting to access configuration before its initialisation on component "${this.name}".`);
+                    throw new WebfocusComponentError(`Attempting to access configuration before its initialisation on ${self.name} component.`);
                 }
                 return self.#_configuration[prop];
             }
