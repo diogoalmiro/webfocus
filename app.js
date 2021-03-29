@@ -1,3 +1,7 @@
+/**
+ * WebfocusApp module.
+ * @module app
+ */
 const express = require('express');
 const pug = require('pug');
 const path = require('path');

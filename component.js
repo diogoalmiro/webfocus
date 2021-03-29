@@ -1,3 +1,8 @@
+/**
+ * WebfocusComponent module.
+ * @module component
+ */
+
 const express = require("express");
 const debug = require("debug");
 const path = require("path");
@@ -70,8 +75,13 @@ class WebfocusComponent {
     }
 }
 
-module.exports = function createComponent(name, description, dirname){
-    return new WebfocusComponent(name, description, dirname);
+/**
+ * Creates an WebfocusComponent
+ * @param {*} name 
+ * @param {*} description 
+ */
+module.exports = function createComponent(name, description){
+    return new WebfocusComponent(name, description);
 }
 
 module.exports.WebfocusComponent = WebfocusComponent;

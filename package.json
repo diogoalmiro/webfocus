@@ -10,12 +10,15 @@
   "author": "diogoalmiro",
   "license": "MIT",
   "dependencies": {
+    "debug": "^2.6.9",
     "express": "^4.17.1",
-    "pug": "^3.0.2",
-    "debug": "^2.6.9"
+    "pug": "^3.0.2"
   },
   "repository": {
     "type": "git",
     "url": "git@git.rnl.tecnico.ulisboa.pt:webfocus/app.git"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.6"
   }
 }
