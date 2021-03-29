@@ -145,8 +145,6 @@ class WebfocusApp {
 
         component.configuration = this.configuration;
         
-        let pugRouter = pug.compileFile(path.join(component.dirname, '/index.pug'), {basedir:this.app.get('views')})
-        
         this.components[name] = component;
         this.configuration.components.push(name);
         this.api.use(`/${name}`, component.app);
