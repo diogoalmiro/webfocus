@@ -2,7 +2,7 @@
   "name": "@webfocus/app",
   "version": "0.0.1",
   "description": "Main webfocus generic application. Allows the creation of specific applications given some requirements.",
-  "main": "lib/app.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
