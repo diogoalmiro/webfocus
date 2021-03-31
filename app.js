@@ -46,7 +46,7 @@ class WebfocusApp {
         }
 
         // Class properties
-        this.configuration = Object.freeze({
+        this.configuration = /*Object.freeze*/({
             components : [],
             ...configuration
         });
@@ -132,6 +132,7 @@ class WebfocusApp {
         let server = this.app.listen(this.configuration.port, () => {
             debug("Server listenning on port %s", server.address().port);
         })
+        return server;
     }
     
     registerComponent(component){
