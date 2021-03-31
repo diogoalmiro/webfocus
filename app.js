@@ -155,7 +155,12 @@ class WebfocusApp {
                 subpath += "index";
             }
             component.debug("Get handler (%s) %s", subpath, req.path);
-            let pObj = this.pugObj({apibaseurl: `/api/${component.urlname}/`, req, basedir: this.app.get('views')});
+            let pObj = this.pugObj({
+                apibaseurl: `/api/${component.urlname}/`,
+                componentbaseurl: `/${component.urlname}/`,
+                req, 
+                basedir: this.app.get('views')
+            });
             res.render(path.join(component.dirname, subpath), pObj, (err, html) => {
                 if( err ){
                     if( subpath == "/index" ){
