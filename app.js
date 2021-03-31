@@ -134,8 +134,8 @@ class WebfocusApp {
         })
     }
     
-    registerComponent(name, component){
-        debug("Registering component \"%s\"", name);
+    registerComponent(component){
+        debug("Registering component \"%s\"", component.urlname);
         if( this.started ){
             throw new WebfocusAppError(`Trying to register components after webfocus application started.`);
         }
@@ -145,17 +145,17 @@ class WebfocusApp {
 
         component.configuration = this.configuration;
         
-        this.components[name] = component;
-        this.configuration.components.push(name);
-        this.api.use(`/${name}`, component.app);
-        this.app.use(`/${name}`, express.static(component.dirname));
-        this.app.get(`/${name}/:subpath(*)?`, (req, res, next) => {
+        this.components[component.urlname] = component;
+        this.configuration.components.push(component.urlname);
+        this.api.use(`/${component.urlname}`, component.app);
+        this.app.use(`/${component.urlname}`, express.static(component.dirname));
+        this.app.get(`/${component.urlname}/:subpath(*)?`, (req, res, next) => {
             let subpath = path.join("/", req.params.subpath || "");
             if( subpath.endsWith("/") ){
                 subpath += "index";
             }
             component.debug("Get handler (%s) %s", subpath, req.path);
-            let pObj = this.pugObj({apibaseurl: `/api/${name}/`, req, basedir: this.app.get('views')});
+            let pObj = this.pugObj({apibaseurl: `/api/${component.urlname}/`, req, basedir: this.app.get('views')});
             res.render(path.join(component.dirname, subpath), pObj, (err, html) => {
                 if( err ){
                     if( subpath == "/index" ){
@@ -178,10 +178,10 @@ class WebfocusApp {
         })
     }
 
-    getComponent(name){
-        let r = this.components[name];
+    getComponent(urlname){
+        let r = this.components[urlname];
         if( !r ){
-            throw new WebfocusAppError(`Component "${name}" not regitered`);
+            throw new WebfocusAppError(`Component "${urlname}" not regitered`);
         }
         return r;
     }

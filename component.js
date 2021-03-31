@@ -30,6 +30,7 @@ class WebfocusComponent {
     constructor(name, description){
         this.app = express.Router();
         this.name = name;
+        this.urlname = name.replace(/\s+/g, '-').toLowerCase();
         this.description = description;
         // https://github.com/detrohutt/caller-dirname/blob/master/src/index.ts
         const _ = Error.prepareStackTrace;
