@@ -139,7 +139,7 @@ describe("WebfocusApp", function(){
 
 	describe("#start", function(){
 
-		it("should listen on specific the port", function(done){
+		it("should send json on the root", function(done){
 			let configuration = { port: 0, name: "Test app" };
 			let webfocusApp = new WebfocusApp(configuration);
 
@@ -173,5 +173,127 @@ describe("WebfocusApp", function(){
 				});
 		})
 
+	})
+
+	describe("#... (methods)", function(){
+		describe("registerComponent", function(){
+			describe("without component", function(){
+				it("should throw an error", function(){
+					try{
+						let webfocusApp = new WebfocusApp();
+						webfocusApp.registerComponent();
+						assert(false)
+					}
+					catch(e){
+						assert(e instanceof WebfocusAppError)
+					}
+				})
+
+				it("should throw an error", function(){
+					try{
+						let webfocusApp = new WebfocusApp();
+						webfocusApp.registerComponent(0);
+						assert(false)
+					}
+					catch(e){
+						assert(e instanceof WebfocusAppError)
+					}
+				})
+				it("should throw an error", function(){
+					try{
+						let webfocusApp = new WebfocusApp();
+						webfocusApp.registerComponent({});
+						assert(false)
+					}
+					catch(e){
+						assert(e instanceof WebfocusAppError)
+					}
+				})
+			})
+
+			describe("with component", function(){
+				it("should register component", function(){
+					let webfocusApp = new WebfocusApp();
+					let component = createComponent();
+					webfocusApp.registerComponent(component);
+					assert(webfocusApp.getComponent(component.urlname) === component);
+				})
+
+				it("should throw on repeated component", function(){
+					let webfocusApp = new WebfocusApp();
+					let component = createComponent();
+					webfocusApp.registerComponent(component);
+					try{
+						webfocusApp.registerComponent(component);
+						assert(false);
+					}
+					catch(e){
+						assert(e instanceof WebfocusAppError);
+					}
+				})
+			})
+
+			describe("after application started", function(){
+				it("should throw an error", function(){
+					let webfocusApp = new WebfocusApp();
+					let component = createComponent();
+					let server = webfocusApp.start();
+					try{
+						webfocusApp.registerComponent(component);
+						assert(false);
+					}
+					catch(e){
+						assert(e instanceof WebfocusAppError);
+					}
+					finally{
+						server.close();
+					}
+				})
+			})
+		})
+
+		describe("getComponent", function(){
+			it("should throw an error", function(){
+				try{
+					let webfocusApp = new WebfocusApp();
+					webfocusApp.getComponent();
+					assert(false);
+				}
+				catch(e){
+					assert(e instanceof WebfocusAppError)
+				}
+			})
+			it("should throw an error", function(){
+				try{
+					let webfocusApp = new WebfocusApp();
+					webfocusApp.getComponent("");
+					assert(false);
+				}
+				catch(e){
+					assert(e instanceof WebfocusAppError)
+				}
+			})
+			it("should return a component", function(){
+				let webfocusApp = new WebfocusApp();
+				let component = createComponent();
+				webfocusApp.registerComponent(component)
+				assert(webfocusApp.getComponent(component.urlname) === component)
+			})
+		})
+
+		describe("getAllComponentNames", function(){
+			it("should return an empty array", function(){
+				let webfocusApp = new WebfocusApp();
+				let a = webfocusApp.getAllComponentNames();
+				assert(Array.isArray(a) && a.length == 0);
+			})
+
+			it("should contain the registered components' urlname", function(){
+				let webfocusApp = new WebfocusApp();
+				let component = createComponent();
+				webfocusApp.registerComponent(component);
+				assert(webfocusApp.getAllComponentNames().findIndex(urlname => urlname == component.urlname) >= 0);
+			})
+		})
 	})
 })

@@ -136,13 +136,16 @@ class WebfocusApp {
     }
     
     registerComponent(component){
-        debug("Registering component \"%s\"", component.urlname);
+        if( !(component instanceof WebfocusComponent) ){
+            throw new WebfocusAppError(`Trying to register something that is not a @webfocus/component component. (${component})`);
+        }
         if( this.started ){
             throw new WebfocusAppError(`Trying to register components after webfocus application started.`);
         }
-        if( !component instanceof WebfocusComponent ){
-            throw new WebfocusAppError(`Trying to register the component "${name}" that is not a @webfocus/component component.`);
+        if( component.urlname in this.components ){
+            throw new WebfocusAppError(`Trying to register a component with the same url name as a component registered. (${component.urlname})`);
         }
+        debug("Registering component \"%s\"", component.urlname);
 
         component.configuration = this.configuration;
         
