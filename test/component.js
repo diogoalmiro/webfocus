@@ -34,7 +34,6 @@ describe("WebfocusComponent", function(){
             let component = createComponent();
             let f = Math.random();
             component.emit('configuration',{avalue:f});
-            console.log(component.configuration.avalue)
             assert(component.configuration.avalue === f);
         })
         it("should ignore setting more than once", function(){

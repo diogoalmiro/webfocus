@@ -92,6 +92,8 @@ class WebfocusApp {
             return null;
         } 
         this.started = true;
+
+        this.emit("configuration", this.configuration);
         
         // Last express handlers
         this.api.use((req, res, next) => {
@@ -122,6 +124,7 @@ class WebfocusApp {
         })
 
         let server = this.app.listen(this.configuration.port, () => {
+            this.emit("listenning", server.address() );
             debug("Server listenning on port %s", server.address().port);
         })
         return server;
@@ -138,8 +141,6 @@ class WebfocusApp {
         }
         debug("Registering component \"%s\"", component.urlname);
 
-        component.emit("configuration", this.configuration);
-        
         this.components[component.urlname] = component;
         this.configuration.components.push(component.urlname);
         this.api.use(`/${component.urlname}`, component.app);
@@ -191,6 +192,12 @@ class WebfocusApp {
 
     getAllComponentNames(){
         return Object.keys(this.components);
+    }
+
+    emit(name, ...obj){
+        for(let c of Object.values(this.components)){
+            c.emit(name, ...obj);
+        }
     }
 } 
 
