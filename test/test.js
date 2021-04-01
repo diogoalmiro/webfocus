@@ -3,11 +3,10 @@ const assert = require("assert");
 const WebfocusApp = require("../app");
 const createComponent = require("../component");
 
-const startValue = Math.random();
-
 function testComponent(){
     let component = createComponent("Test Component", "Component used in mocha tests");
-    let avalue = startValue;
+    let avalue;
+    component.on('configuration', _ => avalue = _.avalue);
     component.app.get("/", (req, res) => {
         res.json({avalue})
     })
@@ -24,7 +23,7 @@ function testComponent(){
     return component;
 }
 describe("Test application", function(){
-    let configuration = { port: 0, name: "Test Application"};
+    let configuration = { port: 0, name: "Test Application", avalue: Math.random()};
     let webfocusApp = new WebfocusApp(configuration);
     let component = testComponent();
     webfocusApp.registerComponent(component);
@@ -41,7 +40,7 @@ describe("Test application", function(){
             .expect('Content-Type', /json/)
             .expect(200)
             .end(function(err, res){
-                assert(res.body.avalue == startValue)
+                assert(res.body.avalue == configuration.avalue)
                 done()
             })
     })

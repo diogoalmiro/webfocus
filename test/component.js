@@ -27,43 +27,30 @@ describe("WebfocusComponent", function(){
     })
 
     describe("configuration", function(){
-        it("should throw error when reading before setting", function(){
-            try{
-                createComponent().configuration.avalue;
-                assert(false);
-            }
-            catch(e){
-                assert(e instanceof WebfocusComponentError);
-            }
-        })
-        it("should throw error when setting more than once", function(){
-            try{
-                let component = createComponent();
-                component.configuration = {avalue: Math.random()};
-                component.configuration = {avalue: Math.random()};
-                assert(false);
-            }
-            catch(e){
-                assert(e instanceof WebfocusComponentError);
-            }
+        it("should be undefined before setting", function(){
+            assert( createComponent().configuration === undefined );
         })
         it("should set the configuration", function(){
             let component = createComponent();
             let f = Math.random();
-            component.configuration = {avalue:f}
-            assert(component.configuration.avalue == f)
+            component.emit('configuration',{avalue:f});
+            assert(component.configuration.avalue == f);
+        })
+        it("should ignore setting more than once", function(){
+            let component = createComponent();
+            let f = Math.random();
+            component.emit('configuration',{avalue:f});
+            component.emit('configuration',{avalue:-f});
+
         })
         it("should set the configuration to read-only", function(){
-            try{
-                let component = createComponent();
-                let f = Math.random();
-                component.configuration = {avalue:f}
-                component.configuration.avalue = -f;
-                assert(component.configuration.avalue == f);
-            }
-            catch(e){
-                assert(e instanceof WebfocusComponentError)
-            }
+        
+            let component = createComponent();
+            let f = Math.random();
+            component.emit('configuration', {avalue:f})
+            component.configuration.avalue = -f;
+            assert(component.configuration.avalue == f);
+        
         })
     })
     

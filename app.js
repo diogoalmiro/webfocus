@@ -138,7 +138,7 @@ class WebfocusApp {
         }
         debug("Registering component \"%s\"", component.urlname);
 
-        component.configuration = this.configuration;
+        component.emit("configuration", this.configuration);
         
         this.components[component.urlname] = component;
         this.configuration.components.push(component.urlname);

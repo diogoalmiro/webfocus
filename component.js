@@ -4,10 +4,13 @@
  */
 const express = require("express");
 const debug = require("debug");
+const warn = debug('webfocus:component:warning');
+warn.enabled = true;
 const path = require("path");
+const { statSync } = require("fs");
+const EventEmitter = require("events").EventEmitter;
 
-const EMPTY = new Object(); 
-
+const EMPTY = new Object();
 /**
  * Class representing internal component Errors 
  */
@@ -20,10 +23,8 @@ function isString(val){
  * Class representing a component.
  * 
  */
-class WebfocusComponent {
-    #_configuration = EMPTY;
-    #_onConfigurationReady = () => {};
-
+class WebfocusComponent extends EventEmitter {
+    
     /**
      * Creates an instance of WebfocusComponent.
      * dirname property will be set to the directory where the constructor was called.
@@ -32,14 +33,17 @@ class WebfocusComponent {
      * @param {String} dirname - Current working directory of the component. (usually __dirname)
      */
     constructor(name="", description="Generic Component Description", dirname){
+        super();
         if( !isString(name) ){
             throw new WebfocusComponentError("Name argument provided is not a string");
         }
-        if( !isString(description) ){
-            throw new WebfocusComponentError("Description argument provided is not a string");
+        try{
+            if( !statSync(dirname).isDirectory() ){
+                throw new WebfocusComponentError("Dirname argument provided is not a valid directory");
+            }
         }
-        if( !isString(dirname) ){
-            throw new WebfocusComponentError("Dirname argument provided is not a string");
+        catch(e){
+            throw new WebfocusComponentError(`Unable to check ${dirname}`, e);
         }
         this.name = name;
         this.urlname = name.replace(/\s+/g, '-').toLowerCase();
@@ -47,39 +51,27 @@ class WebfocusComponent {
         this.description = description;
         this.dirname = dirname;
         this.debug = debug(`webfocus:component:${name}`);
-        this.onConfigurationReady = (cb=()=>{}) => {this.#_onConfigurationReady = cb}
-    }
-
-    /**
-     * Sets the configuration object.
-     * @throws WebfocusComponentError when setting the configuration more than once.
-     */
-    set configuration(configuration){
-        if( this.#_configuration === EMPTY ){
-            this.#_configuration = configuration;
-            this.#_onConfigurationReady();
-        }
-        else{
-            throw new WebfocusComponentError(`Attempting to override configuration object on component "${this.name}".`);
-        }
-    }
-
-    /**
-     * Returns a read-only configuration. This configuration can only be access after the onConfigurationReady function is called.
-     */
-    get configuration(){
-        let self = this;
-        return new Proxy(EMPTY, {
-            set: function(){
-                throw new WebfocusComponentError(`Attempting to override value on ${self.name} component's configuration.`)
-            },
-            get: function(_, prop){
-                if( self.#_configuration === EMPTY ){
-                    throw new WebfocusComponentError(`Attempting to access configuration before its initialisation on ${self.name} component.`);
+        this.once('configuration', (conf) => {
+            debug("Defining configuration");
+            const c = new Proxy(conf, {
+                get(obj, prop){
+                    return obj[prop];
+                },
+                set(obj, prop){
+                    warn("Ignoring setting configuration property")
+                    return obj[prop];
                 }
-                return self.#_configuration[prop];
-            }
+            });
+            this.__defineGetter__("configuration", function(){
+                return c;
+            })
+            this.emit('configurationReady');
+            this.on('configuration', _ => {
+                warn("Ignoring setting configuration more than once");
+            })
         })
+
+
     }
 }
 
