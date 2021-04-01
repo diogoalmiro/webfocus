@@ -19,13 +19,13 @@ function createComponent(){
 
 describe("WebfocusApp", function(){
 	describe("#constructor", function(){
-		describe("without parameters", function(){
+		context("without parameters", function(){
 			it("should return an webfocusApp instance",function(){
 				const webfocusApp = new WebfocusApp();
 				assert(webfocusApp instanceof WebfocusApp);
 			})
 		})
-		describe("with parameters", function(){
+		context("with parameters", function(){
 			it("should expect the port property", function(){
 				assert(failConstructor({}))
 			})
@@ -175,7 +175,7 @@ describe("WebfocusApp", function(){
 
 	describe("#... (methods)", function(){
 		describe("registerComponent", function(){
-			describe("without component", function(){
+			context("without component", function(){
 				it("should throw an error", function(){
 					try{
 						let webfocusApp = new WebfocusApp();
@@ -209,7 +209,7 @@ describe("WebfocusApp", function(){
 				})
 			})
 
-			describe("with component", function(){
+			context("with component", function(){
 				it("should register component", function(){
 					let webfocusApp = new WebfocusApp();
 					let component = createComponent();
@@ -231,7 +231,7 @@ describe("WebfocusApp", function(){
 				})
 			})
 
-			describe("after application started", function(){
+			context("after application started", function(){
 				it("should throw an error", function(){
 					let webfocusApp = new WebfocusApp();
 					let component = createComponent();
