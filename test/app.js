@@ -1,17 +1,7 @@
 const assert = require('assert');
 const request = require('supertest');
 const WebfocusApp = require('../app');
-const WebfocusAppError = WebfocusApp.WebfocusAppError;
 const createComponent_ = require('../component');
-
-function failConstructor(obj){
-	try{
-		return new WebfocusApp(obj) && false;
-	}
-	catch(e){
-		return e instanceof WebfocusAppError;
-	}
-}
 
 function createComponent(){
 	return createComponent_("Test Component", "Component used in the tests");
@@ -19,32 +9,44 @@ function createComponent(){
 
 describe("WebfocusApp", function(){
 	describe("#constructor", function(){
-		context("without parameters", function(){
-			it("should return an webfocusApp instance",function(){
-				const webfocusApp = new WebfocusApp();
-				assert(webfocusApp instanceof WebfocusApp);
-			})
+		it("should return an webfocusApp instance on port 0",function(){
+			const webfocusApp = new WebfocusApp();
+			assert(
+				webfocusApp instanceof WebfocusApp &&
+				webfocusApp.configuration.port == 0);
 		})
-		context("with parameters", function(){
-			it("should expect the port property", function(){
-				assert(failConstructor({}))
-			})
-			it("should expect the port property to be positive", function(){
-				assert(failConstructor({port:-1}))
-			})
-			it("should expect the port property to be integer", function(){
-				assert(failConstructor({port:"hello"}))
-			})
-			it("should expect the name property", function(){
-				assert(failConstructor({port:7000}))
-			})
-			it("should expect the name property", function(){
-				assert(failConstructor({port:7000,name: new Object()}))
-			})
-			it("should return an webfocusApp instance", function(){
-				const webfocusApp = new WebfocusApp({port:7000,name:"Test"});
-				assert(webfocusApp instanceof WebfocusApp);	
-			})
+		it("should change the port property to 0", function(){
+			const webfocusApp = new WebfocusApp({});
+			assert(
+				webfocusApp instanceof WebfocusApp &&
+				webfocusApp.configuration.port == 0);
+		})
+		it("should change the port property to 0", function(){
+			const webfocusApp = new WebfocusApp({port:-1});
+			assert(
+				webfocusApp instanceof WebfocusApp &&
+				webfocusApp.configuration.port == 0);
+		})
+		it("should expect the port property to be integer", function(){
+			const webfocusApp = new WebfocusApp({port: "something"});
+			assert(
+				webfocusApp instanceof WebfocusApp &&
+				webfocusApp.configuration.port == 0);
+		})
+		it("should keep the port property", function(){
+			const webfocusApp = new WebfocusApp({port:7000});
+			assert(
+				webfocusApp instanceof WebfocusApp &&
+				webfocusApp.configuration.port == 7000);
+		})
+		
+		it("should keep the name property", function(){
+			let name = new Object();
+			const webfocusApp = new WebfocusApp({port:7000, name});
+			assert(
+				webfocusApp instanceof WebfocusApp &&
+				webfocusApp.configuration.port === 7000 &&
+				webfocusApp.configuration.name === name );
 		})
 	})
 
@@ -217,59 +219,34 @@ describe("WebfocusApp", function(){
 					assert(webfocusApp.getComponent(component.urlname) === component);
 				})
 
-				it("should throw on repeated component", function(){
+				it("ignore repeated components", function(){
 					let webfocusApp = new WebfocusApp();
 					let component = createComponent();
-					webfocusApp.registerComponent(component);
-					try{
-						webfocusApp.registerComponent(component);
-						assert(false);
-					}
-					catch(e){
-						assert(e instanceof WebfocusAppError);
-					}
+					assert(
+						webfocusApp.registerComponent(component) &&
+						!webfocusApp.registerComponent(component));
 				})
 			})
 
 			context("after application started", function(){
-				it("should throw an error", function(){
+				it("should ignore component", function(){
 					let webfocusApp = new WebfocusApp();
 					let component = createComponent();
 					let server = webfocusApp.start();
-					try{
-						webfocusApp.registerComponent(component);
-						assert(false);
-					}
-					catch(e){
-						assert(e instanceof WebfocusAppError);
-					}
-					finally{
-						server.close();
-					}
+					assert(!webfocusApp.registerComponent(component));
+					server.close();
 				})
 			})
 		})
 
 		describe("getComponent", function(){
-			it("should throw an error", function(){
-				try{
-					let webfocusApp = new WebfocusApp();
-					webfocusApp.getComponent();
-					assert(false);
-				}
-				catch(e){
-					assert(e instanceof WebfocusAppError)
-				}
+			it("should be null", function(){
+				let webfocusApp = new WebfocusApp();
+				assert(webfocusApp.getComponent() === null);
 			})
-			it("should throw an error", function(){
-				try{
-					let webfocusApp = new WebfocusApp();
-					webfocusApp.getComponent("");
-					assert(false);
-				}
-				catch(e){
-					assert(e instanceof WebfocusAppError)
-				}
+			it("should be null", function(){
+				let webfocusApp = new WebfocusApp();
+				assert(webfocusApp.getComponent("") === null);
 			})
 			it("should return a component", function(){
 				let webfocusApp = new WebfocusApp();

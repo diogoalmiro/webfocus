@@ -4,13 +4,15 @@
  */
 const express = require('express');
 const path = require('path');
-const debug = require('debug')('webfocus:app');
+const debugp = require('debug');
+const debug = debugp('webfocus:app');
+const warn = debugp('webfocus:app:warning');
+warn.enabled = true;
 
 /**
- * WebfocusAppError
+ * DEFAULT_VALUES
  */
-class WebfocusAppError extends Error{}
-
+const DEFAULT_VALUES = () => ({ port: 0, name: "Default Application Name", components: []})
 /**
  * Class that allows the registration of components (see @webfocus/component) and creates a server.
  * 
@@ -22,32 +24,23 @@ class WebfocusApp {
      * Creates a Webfocus App Instance
      * 
      * Throws @WebfocusAppError when configuration object does not contain the port or the name values. 
-     * @param {Object} [configuration] - Configuration Object, the default is the object {port:8000,name:"App Name"}
+     * @param {Object} [configuration] - Configuration Object, the default is the object DEFAULT_VALUES
      */
-    constructor(configuration={port: 8000, name: "App Name"}){
+    constructor(configuration){
         debug("constructor");
+        this.configuration = Object.assign( {}, DEFAULT_VALUES(), configuration );
         // Configuration checks
-        if( !("port" in configuration) ){
-            throw new WebfocusAppError(`Constructor requires an object with a "port" key`);
+        if( !Number.isSafeInteger(this.configuration.port) || this.configuration.port < 0 || this.configuration.port > 65535 ){
+            warn("Invalid port in configuration, a random port will be provided on start");
+            this.configuration.port = 0;
         }
-        
-        if( !Number.isSafeInteger(configuration.port) || configuration.port < 0 || configuration.port > 65535 ){
-            throw new WebfocusAppError(`Invalid port value provided (${configuration.port})`);
+        if( (typeof this.configuration.name !== 'string') && !(this.configuration.name instanceof String) ){
+            warn("Unexpected Object \"name\" in configuration (%o)", configuration.name);
         }
-
-        if( !("name" in configuration) ){
-            throw new WebfocusAppError(`Constructor requires an object with a "name" key`);
+        if( this.configuration.components.length > 0 ){
+            warn("Ignoring components property of configuration");
+            this.configuration.components = []; 
         }
-
-        if( (typeof configuration.name !== 'string') && !(configuration.name instanceof String) ){
-            throw new WebfocusAppError(`Invalid name value provided (${configuration.name})`);
-        }
-
-        // Class properties
-        this.configuration = /*Object.freeze*/({
-            components : [],
-            ...configuration
-        });
         this.components = {};
         this.started = false;
 
@@ -95,7 +88,8 @@ class WebfocusApp {
     start(){
         debug("started")
         if( this.started ){
-            throw new WebfocusAppError("Method start can only be called once on the same instance");
+            warn("Ignoring multiple start calls.");
+            return null;
         } 
         this.started = true;
         
@@ -135,10 +129,12 @@ class WebfocusApp {
     
     registerComponent(component){
         if( this.started ){
-            throw new WebfocusAppError(`Trying to register components after webfocus application started.`);
+            warn("Ignoring component after start application started.");
+            return false;
         }
         if( component.urlname in this.components ){
-            throw new WebfocusAppError(`Trying to register a component with the same url name as a component registered. (${component.urlname})`);
+            warn("Ignoring component with the same urlname as a previous component.");
+            return false;
         }
         debug("Registering component \"%s\"", component.urlname);
 
@@ -180,12 +176,15 @@ class WebfocusApp {
                 }
             })
         })
+        return true;
     }
 
     getComponent(urlname){
+        debug("Getting component \"%s\".", urlname);
         let r = this.components[urlname];
         if( !r ){
-            throw new WebfocusAppError(`Component "${urlname}" not regitered`);
+            warn("Component \"%s\" not fount.", urlname)
+            return null;
         }
         return r;
     }
@@ -196,4 +195,3 @@ class WebfocusApp {
 } 
 
 module.exports = WebfocusApp;
-module.exports.WebfocusAppError = WebfocusAppError;
