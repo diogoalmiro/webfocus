@@ -13,6 +13,9 @@ const EMPTY = new Object();
  */
 class WebfocusComponentError extends Error {}
 
+function isString(val){
+    return typeof val === 'string' || val instanceof String;
+}
 /**
  * Class representing a component.
  * 
@@ -26,18 +29,24 @@ class WebfocusComponent {
      * dirname property will be set to the directory where the constructor was called.
      * @param {String} name - Display name of the component.
      * @param {String} description - Description.
+     * @param {String} dirname - Current working directory of the component. (usually __dirname)
      */
-    constructor(name, description){
-        this.app = express.Router();
+    constructor(name="", description="Generic Component Description", dirname){
+        if( !isString(name) ){
+            throw new WebfocusComponentError("Name argument provided is not a string");
+        }
+        if( !isString(description) ){
+            throw new WebfocusComponentError("Description argument provided is not a string");
+        }
+        if( !isString(dirname) ){
+            throw new WebfocusComponentError("Dirname argument provided is not a string");
+        }
         this.name = name;
         this.urlname = name.replace(/\s+/g, '-').toLowerCase();
+        this.app = express.Router();
         this.description = description;
-        // https://github.com/detrohutt/caller-dirname/blob/master/src/index.ts
-        const _ = Error.prepareStackTrace;
-        Error.prepareStackTrace = (_, stack) => stack;
-        this.dirname = path.dirname(new Error().stack.find(s => s.getFileName() != __filename).getFileName());
-        Error.prepareStackTrace = _;
-        this.debug = debug(`webfocus:component:${name}`)
+        this.dirname = dirname;
+        this.debug = debug(`webfocus:component:${name}`);
         this.onConfigurationReady = (cb=()=>{}) => {this.#_onConfigurationReady = cb}
     }
 
@@ -75,12 +84,17 @@ class WebfocusComponent {
 }
 
 /**
- * Creates an WebfocusComponent
- * @param {*} name 
- * @param {*} description 
+ * Creates an WebfocusComponent. Hides the need to pass __dirname explicitaly.
+ * @param {String} name - Name to crete the component.
+ * @param {String} description - Description of the component.
  */
 module.exports = function createComponent(name, description){
-    return new WebfocusComponent(name, description);
+    // https://github.com/detrohutt/caller-dirname/blob/master/src/index.ts
+    const _ = Error.prepareStackTrace;
+    Error.prepareStackTrace = (_, stack) => stack;
+    const dirname = path.dirname(new Error().stack.find(s => s.getFileName() != __filename).getFileName());
+    Error.prepareStackTrace = _;
+    return new WebfocusComponent(name, description, dirname);
 }
 
 module.exports.WebfocusComponent = WebfocusComponent;

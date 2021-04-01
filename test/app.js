@@ -1,6 +1,4 @@
-const { fail } = require('assert');
 const assert = require('assert');
-const { response } = require('express');
 const request = require('supertest');
 const WebfocusApp = require('../app');
 const WebfocusAppError = WebfocusApp.WebfocusAppError;

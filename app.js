@@ -3,7 +3,6 @@
  * @module app
  */
 const express = require('express');
-const pug = require('pug');
 const path = require('path');
 const debug = require('debug')('webfocus:app');
 const WebfocusComponent = require("./component").WebfocusComponent;
