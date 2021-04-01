@@ -50,28 +50,26 @@ class WebfocusComponent extends EventEmitter {
         this.app = express.Router();
         this.description = description;
         this.dirname = dirname;
-        this.debug = debug(`webfocus:component:${name}`);
+        this.debug = debug(`webfocus:component:${this.urlname}`);
+        let config = EMPTY;
+        this.configuration = new Proxy({}, {
+            set: (obj, prop, value) => {
+                warn("Trying to set read-only configuration");
+                return config[prop]
+            },
+            get: (obj, prop) => {
+                if(config === EMPTY) warn("Trying to read configuration before initialization");
+                return config[prop]
+            } 
+        })
         this.once('configuration', (conf) => {
-            debug("Defining configuration");
-            const c = new Proxy(conf, {
-                get(obj, prop){
-                    return obj[prop];
-                },
-                set(obj, prop){
-                    warn("Ignoring setting configuration property")
-                    return obj[prop];
-                }
-            });
-            this.__defineGetter__("configuration", function(){
-                return c;
-            })
+            this.debug("Defining configuration");
+            config = conf;
             this.emit('configurationReady');
             this.on('configuration', _ => {
                 warn("Ignoring setting configuration more than once");
             })
         })
-
-
     }
 }
 

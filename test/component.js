@@ -28,20 +28,21 @@ describe("WebfocusComponent", function(){
 
     describe("configuration", function(){
         it("should be undefined before setting", function(){
-            assert( createComponent().configuration === undefined );
+            assert( createComponent().configuration.avalue === undefined );
         })
         it("should set the configuration", function(){
             let component = createComponent();
             let f = Math.random();
             component.emit('configuration',{avalue:f});
-            assert(component.configuration.avalue == f);
+            console.log(component.configuration.avalue)
+            assert(component.configuration.avalue === f);
         })
         it("should ignore setting more than once", function(){
             let component = createComponent();
             let f = Math.random();
             component.emit('configuration',{avalue:f});
             component.emit('configuration',{avalue:-f});
-
+            assert(component.configuration.avalue === f);
         })
         it("should set the configuration to read-only", function(){
         
@@ -49,9 +50,7 @@ describe("WebfocusComponent", function(){
             let f = Math.random();
             component.emit('configuration', {avalue:f})
             component.configuration.avalue = -f;
-            assert(component.configuration.avalue == f);
-        
+            assert(component.configuration.avalue === f);
         })
     })
-    
 })
