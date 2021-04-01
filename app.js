@@ -5,7 +5,6 @@
 const express = require('express');
 const path = require('path');
 const debug = require('debug')('webfocus:app');
-const WebfocusComponent = require("./component").WebfocusComponent;
 
 /**
  * WebfocusAppError
@@ -135,9 +134,6 @@ class WebfocusApp {
     }
     
     registerComponent(component){
-        if( !(component instanceof WebfocusComponent) ){
-            throw new WebfocusAppError(`Trying to register something that is not a @webfocus/component component. (${component})`);
-        }
         if( this.started ){
             throw new WebfocusAppError(`Trying to register components after webfocus application started.`);
         }

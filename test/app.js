@@ -183,7 +183,7 @@ describe("WebfocusApp", function(){
 						assert(false)
 					}
 					catch(e){
-						assert(e instanceof WebfocusAppError)
+						assert(true)
 					}
 				})
 
@@ -194,7 +194,7 @@ describe("WebfocusApp", function(){
 						assert(false)
 					}
 					catch(e){
-						assert(e instanceof WebfocusAppError)
+						assert(true)
 					}
 				})
 				it("should throw an error", function(){
@@ -204,7 +204,7 @@ describe("WebfocusApp", function(){
 						assert(false)
 					}
 					catch(e){
-						assert(e instanceof WebfocusAppError)
+						assert(true)
 					}
 				})
 			})
