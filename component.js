@@ -11,10 +11,6 @@ const { statSync } = require("fs");
 const EventEmitter = require("events").EventEmitter;
 
 const EMPTY = new Object();
-/**
- * Class representing internal component Errors 
- */
-class WebfocusComponentError extends Error {}
 
 function isString(val){
     return typeof val === 'string' || val instanceof String;
@@ -35,15 +31,15 @@ class WebfocusComponent extends EventEmitter {
     constructor(name="", description="Generic Component Description", dirname){
         super();
         if( !isString(name) ){
-            throw new WebfocusComponentError("Name argument provided is not a string");
+            throw new Error("Name argument provided is not a string");
         }
         try{
             if( !statSync(dirname).isDirectory() ){
-                throw new WebfocusComponentError("Dirname argument provided is not a valid directory");
+                throw new Error("Dirname argument provided is not a valid directory");
             }
         }
         catch(e){
-            throw new WebfocusComponentError(`Unable to check ${dirname}`, e);
+            throw new Error(`Unable to check ${dirname}`, e);
         }
         this.name = name;
         this.urlname = name.replace(/\s+/g, '-').toLowerCase();
@@ -88,4 +84,3 @@ module.exports = function createComponent(name, description){
 }
 
 module.exports.WebfocusComponent = WebfocusComponent;
-module.exports.WebfocusComponentError = WebfocusComponentError;
