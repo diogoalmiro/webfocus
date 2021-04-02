@@ -7,8 +7,12 @@ const debug = require("debug");
 const warn = debug('webfocus:component:warning');
 warn.enabled = true;
 const path = require("path");
-const { statSync } = require("fs");
+const { statSync, mkdirSync } = require("fs");
 const EventEmitter = require("events").EventEmitter;
+const appDataPath = require("appdata-path");
+
+const folder = appDataPath('webfocus-components');
+mkdirSync(folder, {recursive:true});
 
 const EMPTY = new Object();
 
@@ -45,8 +49,14 @@ class WebfocusComponent extends EventEmitter {
         this.urlname = name.replace(/\s+/g, '-').toLowerCase();
         this.app = express.Router();
         this.description = description;
-        this.dirname = dirname;
         this.debug = debug(`webfocus:component:${this.urlname}`);
+
+        // Create app folder 
+        let componentFolder = path.join(folder, this.urlname);
+        mkdirSync(componentFolder, {recursive:true});
+        this.debug("Created directory %s", componentFolder)
+        this.componentFolder = componentFolder; 
+        this.dirname = dirname;
         let config = EMPTY;
         this.configuration = new Proxy({}, {
             set: (obj, prop, value) => {
