@@ -7,28 +7,39 @@ const path = require('path');
 const debugp = require('debug');
 const debug = debugp('webfocus:app');
 const warn = debugp('webfocus:app:warning');
+const appDataPath = require('appdata-path');
+const {mkdirSync} = require("fs");
 warn.enabled = true;
 
+const folder = appDataPath('webfocus-app');
+mkdirSync(folder, {recursive:true});
+
 /**
- * DEFAULT_VALUES
+ * Object that defines default properties for the {@link WebfocusApp}
  */
-const DEFAULT_VALUES = () => ({ port: 0, name: "Default Application Name", components: []})
+const DEFAULT_VALUES = {
+    port: 0,
+    name: "Default Application Name",
+    components: []
+}
+
 /**
- * Class that allows the registration of components (see @webfocus/component) and creates a server.
+ * Class that allows the registration of components ({@link WebfocusComponent}) and creates a server.
  * 
- * To start the sever call (.start) the server will listen on the .configuration.port, `8000` by default.
+ * To start the sever call {@link WebfocusApp.start} the server will listen on the {@link WebfocusApp.configuration.port}.
+ * 
+ * The default values for the application are {@link app.DEFAULT_VALUES} @see [default values]{DEFAULT_VALUES}
  */
 class WebfocusApp {
 
     /**
      * Creates a Webfocus App Instance
      * 
-     * Throws @WebfocusAppError when configuration object does not contain the port or the name values. 
      * @param {Object} [configuration] - Configuration Object, the default is the object DEFAULT_VALUES
      */
     constructor(configuration){
         debug("constructor");
-        this.configuration = Object.assign( {}, DEFAULT_VALUES(), configuration );
+        this.configuration = Object.assign({}, DEFAULT_VALUES, configuration);
         // Configuration checks
         if( !Number.isSafeInteger(this.configuration.port) || this.configuration.port < 0 || this.configuration.port > 65535 ){
             warn("Invalid port in configuration, a random port will be provided on start");
@@ -41,6 +52,14 @@ class WebfocusApp {
             warn("Ignoring components property of configuration");
             this.configuration.components = []; 
         }
+        if( "app-directory" in this.configuration ){
+            warn("Ignoring \"app-directory\" value in configuration.")
+        }
+        // Create app folder 
+        let appFolder = this.configuration["app-directory"] = path.join(folder, this.configuration.name.replace(/\s+/g, '-').toLowerCase());
+        mkdirSync(appFolder, {recursive:true});
+        debug("Created directory %s", appFolder)
+
         this.components = {};
         this.started = false;
 
@@ -72,7 +91,8 @@ class WebfocusApp {
 
     /**
      * Creates an object 
-     * @param {*} objs 
+     * @param {Object} objs
+     * @returns {Object}
      */
     pugObj(objs){
         let obj = { ...objs };
@@ -82,8 +102,7 @@ class WebfocusApp {
 
     /**
      * Starts the WebfocusApp instance.
-     * 
-     * Throws an @WebfocusAppError when invoced more than once.
+     * @returns {Server}
      */
     start(){
         debug("started")
@@ -130,6 +149,11 @@ class WebfocusApp {
         return server;
     }
     
+    /**
+     * Register an WebfocusComponent to this application.
+     * @param {WebfocusComponent} Component to register.
+     * @returns {void}
+     */
     registerComponent(component){
         if( this.started ){
             warn("Ignoring component after start application started.");
@@ -180,6 +204,10 @@ class WebfocusApp {
         return true;
     }
 
+    /**
+     * @param {*} urlname - URL name of the component.
+     * @returns {WebfocusComponent} The webfocus component instance with the given urlname.
+     */
     getComponent(urlname){
         debug("Getting component \"%s\".", urlname);
         let r = this.components[urlname];
@@ -190,10 +218,18 @@ class WebfocusApp {
         return r;
     }
 
+    /**
+     * @returns {String[]} All the component urlnames currently known.
+     */
     getAllComponentNames(){
         return Object.keys(this.components);
     }
 
+    /**
+     * Broadcast an event to the components currently known.
+     * @param {*} name - Name of the event.
+     * @param  {...any} obj - Data to share.
+     */
     emit(name, ...obj){
         for(let c of Object.values(this.components)){
             c.emit(name, ...obj);

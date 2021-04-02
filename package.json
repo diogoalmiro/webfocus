@@ -11,6 +11,7 @@
   "author": "diogoalmiro",
   "license": "MIT",
   "dependencies": {
+    "appdata-path": "^1.0.0",
     "debug": "^2.6.9",
     "express": "^4.17.1",
     "pug": "^3.0.2"

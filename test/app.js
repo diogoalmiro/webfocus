@@ -41,7 +41,7 @@ describe("WebfocusApp", function(){
 		})
 		
 		it("should keep the name property", function(){
-			let name = new Object();
+			let name = "Test app";
 			const webfocusApp = new WebfocusApp({port:7000, name});
 			assert(
 				webfocusApp instanceof WebfocusApp &&
@@ -51,7 +51,7 @@ describe("WebfocusApp", function(){
 	})
 
 	describe("#configuration", function(){
-		let configuration = {port:8000, name: "Test", avalue: Math.random()};
+		let configuration = {port:8000, name: "Test app", avalue: Math.random()};
 
 		/*it('should be read-only', function(){
 			let webfocusApp = new WebfocusApp(configuration);
@@ -85,7 +85,7 @@ describe("WebfocusApp", function(){
 	})
 
 	describe("#... (other properties)", function(){
-		let configuration = {port:0, name: "Test", avalue: Math.random()};
+		let configuration = {port:0, name: "Test app", avalue: Math.random()};
 		it('should save a components dictionary', function(){
 			let webfocusApp = new WebfocusApp(configuration);
 			let component = createComponent();
@@ -119,7 +119,7 @@ describe("WebfocusApp", function(){
 	})
 
 	describe("#pubObj", function(){
-		let configuration = {port:0, name: "Test", avalue: Math.random()};
+		let configuration = {port:0, name: "Test app", avalue: Math.random()};
 		it("should contain the configuration", function(){
 			let webfocusApp = new WebfocusApp(configuration);
 			assert(webfocusApp.pugObj().configuration === webfocusApp.configuration);
