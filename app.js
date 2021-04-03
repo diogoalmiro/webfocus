@@ -168,6 +168,7 @@ class WebfocusApp {
         this.components[component.urlname] = component;
         this.configuration.components.push(component.urlname);
         this.api.use(`/${component.urlname}`, component.app);
+        this.app.use(`/${component.urlname}`, express.static(component.componentFolder));
         this.app.use(`/${component.urlname}`, express.static(component.dirname));
         this.app.get(`/${component.urlname}/:subpath(*)?`, (req, res, next) => {
             let subpath = path.join("/", req.params.subpath || "");
