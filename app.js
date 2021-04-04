@@ -10,28 +10,6 @@ const warn = debugp('webfocus:app:warning');
 warn.enabled = true;
 const appDataPath = require('appdata-path');
 const {mkdirSync} = require("fs");
-const SysTray = require('systray').default;
-
-let systray = new SysTray({
-    menu: {
-        icon : 'static/icon.ico',
-        title : "Webfocus",
-        tooltip : "Webfocus is Running",
-        items: [{
-            title: "Exit",
-            tooltip: "bb",
-            checked: false,
-            enabled: true
-        }]
-    },
-    debug: true
-});
-
-systray.onClick(a => {
-    systray.kill();
-})
-
-
 const folder = appDataPath('webfocus-app');
 mkdirSync(folder, {recursive:true});
 
