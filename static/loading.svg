@@ -1,0 +1,29 @@
+<?xml version="1.0" standalone="no"?>
+<svg viewBox="-62.5 -62.5 125 125" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(1,-1)">
+        <path id="main" class="favicon-loading" d="
+
+        M 22.81 49.06
+        A 54.1 54.1 1 1 1 -4.28 -54.55
+        Z
+        M 35.36 -35.36
+        L 56.07 0
+        L 35.36 35.36
+
+        " fill="none" stroke="midnightblue" stroke-width="9.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <style>
+        #main.favicon-loading{
+            stroke-dasharray: 1000;
+            stroke-dashoffset: -1000;
+            animation: dash;
+            animation-timing-function: ease-in-out;
+            animation-duration: 5s;
+            animation-delay: 2s;
+            
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes dash{0%{stroke-dashoffset: -1000;}50%{stroke-dashoffset: 0;} 100%{stroke-dashoffset: 1000;}}
+    </style>
+    </g>
+</svg>

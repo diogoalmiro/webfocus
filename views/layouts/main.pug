@@ -10,9 +10,11 @@ html.h-100
   body.d-flex.flex-column.h-100
     nav.navbar.navbar-expand-md.navbar-light
       div.container
-        div.navbar-brand.d-flex.flex-column
-          h3 Webfocus
-          h6= configuration.name
+        a.navbar-brand(href="/").d-flex
+          img(src="/favicon.svg",width="60").mx-3
+          div.d-flex.flex-column
+            h1 Webfocus
+            h6= configuration.name
         button.navbar-toggler(type="button",data-bs-toggle="collapse",data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         div#navbar.collapse.navbar-collapse

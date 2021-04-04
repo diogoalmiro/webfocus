@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<svg viewBox="-62.5 -62.5 125 125" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <g transform="scale(1,-1)">
+        <path id="main" d="
+
+        M 22.81 49.06
+        A 54.1 54.1 1 1 1 -4.28 -54.55
+        Z
+        M 35.36 -35.36
+        L 56.07 0
+        L 35.36 35.36
+
+        " fill="none" stroke="midnightblue" stroke-width="9.5" stroke-linejoin="round" stroke-linecap="round"/>
+    </g>
+</svg>

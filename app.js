@@ -7,9 +7,30 @@ const path = require('path');
 const debugp = require('debug');
 const debug = debugp('webfocus:app');
 const warn = debugp('webfocus:app:warning');
+warn.enabled = true;
 const appDataPath = require('appdata-path');
 const {mkdirSync} = require("fs");
-warn.enabled = true;
+const SysTray = require('systray').default;
+
+let systray = new SysTray({
+    menu: {
+        icon : 'static/icon.ico',
+        title : "Webfocus",
+        tooltip : "Webfocus is Running",
+        items: [{
+            title: "Exit",
+            tooltip: "bb",
+            checked: false,
+            enabled: true
+        }]
+    },
+    debug: true
+});
+
+systray.onClick(a => {
+    systray.kill();
+})
+
 
 const folder = appDataPath('webfocus-app');
 mkdirSync(folder, {recursive:true});
@@ -143,8 +164,9 @@ class WebfocusApp {
         })
 
         let server = this.app.listen(this.configuration.port, () => {
-            this.emit("listenning", server.address() );
-            debug("Server listenning on port %s", server.address().port);
+            let addr = server.address()
+            this.emit("listenning", addr );
+            debug("Server listenning on port %s", addr.port);
         })
         return server;
     }
@@ -167,7 +189,10 @@ class WebfocusApp {
 
         this.components[component.urlname] = component;
         this.configuration.components.push(component.urlname);
+        // COMPONENT API
         this.api.use(`/${component.urlname}`, component.app);
+
+        // STATIC FILES
         this.app.use(`/${component.urlname}`, express.static(component.componentFolder));
         this.app.use(`/${component.urlname}`, express.static(component.dirname));
         this.app.get(`/${component.urlname}/:subpath(*)?`, (req, res, next) => {
