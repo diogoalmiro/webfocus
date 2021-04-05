@@ -1,4 +1,17 @@
-function requestJSON(url, method, obj){
+/**
+ * Makes an HTTP request to a given url (uses fecth internally)
+ * The obj is stringified and putting in the HTTP body, except when HEAD and GET requests.
+ * This method sets 'Accept-Language' and 'Content-Type' to 'application/json'.
+ * 
+ * If wrapError is true this method will check for HTTP response before returning the json body.
+ * In case of error it will throw a new Error with the HTTP status text as message and the response object.
+ * 
+ * @param {*} url 
+ * @param {*} method 
+ * @param {*} obj 
+ * @param {*} wrapError 
+ */
+function requestJSON(url, method, obj, wrapError=false){
     
     let body = JSON.stringify(obj);
     if( method.match(/(get|head)/i) ){
@@ -8,11 +21,18 @@ function requestJSON(url, method, obj){
         'Accept-Language' : 'application/json'
     }
     if( body ){
-        headers['Content-type'] = 'application/json'
+        headers['Content-Type'] = 'application/json'
         headers['Content-Lenght'] = body.length
     }
 
-    return fetch(url, {method,headers,body}).then( res => res.json() )
+    return fetch(url, {method,headers,body}).then( res => {
+        if( !wrapError ) return res.json();
+        if( res.ok ) return res.json();
+
+        let e = new Error(res.statusText);
+        e.response = res;
+        throw e;
+    })
 }
 
 function getJSON( url ){
