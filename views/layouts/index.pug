@@ -3,4 +3,17 @@ extends ./main.pug
 block head
 
 block main
-    p Hello #{configuration['name']}
+  mixin card(urlname)
+    - let c = getComponent(urlname);
+    .card.m-2
+      .card-body 
+        h5.card-title= c.name
+        p.card-text= c.description
+        a.card-link(href=c.urlname) Open
+
+  div
+    if configuration.components.length > 0
+      - for(let urlname of configuration.components)
+        +card(urlname)
+    else 
+      p No components added to this application.

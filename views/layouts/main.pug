@@ -14,8 +14,8 @@ html.h-100
           img(src="/favicon.svg",width="60").mx-3
           div.d-flex.flex-column
             h1 Webfocus
-            h6= configuration.name
-        button.navbar-toggler(type="button",data-bs-toggle="collapse",data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
+            h6.text-wrap= configuration.name
+        button.navbar-toggler.m-auto(type="button",data-bs-toggle="collapse",data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
           span.navbar-toggler-icon
         div#navbar.collapse.navbar-collapse
           ul.navbar-nav.me-auto.mb-2
@@ -23,7 +23,7 @@ html.h-100
               - let klass = req.path.indexOf(`/${path}`) === 0 ? 'nav-link active' : 'nav-link'
               li.nav-item: a(href=`/${path}/`, class=klass)= path
             - for(let path of configuration.components)
-              +nava(path)
+              +nava(getComponent(path).name)
     main.container.my-2
       block main
     footer.mt-auto

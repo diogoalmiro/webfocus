@@ -96,6 +96,14 @@ class WebfocusApp {
     pugObj(objs){
         let obj = { ...objs };
         obj.configuration = this.configuration;
+        obj.getComponent = (urlname) => {
+            let c = this.getComponent(urlname);
+            return {
+                urlname : c.urlname,
+                name : c.name,
+                description : c.description
+            }
+        }
         return obj;
     }
 
