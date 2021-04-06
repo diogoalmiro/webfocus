@@ -12,18 +12,24 @@
 
         " fill="none" stroke="midnightblue" stroke-width="9.5" stroke-linejoin="round" stroke-linecap="round"/>
     <style>
+        #main{
+            --path-lenght-neg: -374.5050048828125;
+            --path-lenght: 374.5050048828125;
+        }
         #main.favicon-loading{
-            stroke-dasharray: 1000;
-            stroke-dashoffset: -1000;
+            stroke-dasharray: var(--path-lenght);
+            stroke-dashoffset: var(--path-lenght-neg);
             animation: dash;
             animation-timing-function: ease-in-out;
             animation-duration: 5s;
-            animation-delay: 2s;
-            
             animation-iteration-count: infinite;
         }
 
-        @keyframes dash{0%{stroke-dashoffset: -1000;}50%{stroke-dashoffset: 0;} 100%{stroke-dashoffset: 1000;}}
+        @keyframes dash{
+            0%{stroke-dashoffset: var(--path-lenght-neg);}
+            50%{stroke-dashoffset: 0;}
+            100%{stroke-dashoffset: var(--path-lenght);}
+        }
     </style>
     </g>
 </svg>
