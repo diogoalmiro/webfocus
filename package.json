@@ -1,5 +1,5 @@
 {
-  "name": "webfocus",
+  "name": "@webfocus/app",
   "version": "0.0.0",
   "description": "(WIP) Main webfocus generic application. Allows the creation of specific applications given some requirements.",
   "main": "app.js",
@@ -17,13 +17,17 @@
     "pug": "^3.0.2",
     "systray": "^1.0.5"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/diogoalmiro/webfocus"
-  },
+  "repository": "diogoalmiro/webfocus",
   "devDependencies": {
     "jsdoc": "^3.6.6",
     "mocha": "^8.3.2",
     "supertest": "^6.1.3"
+  },
+  "bugs": {
+    "url": "https://github.com/diogoalmiro/webfocus/issues"
+  },
+  "homepage": "https://github.com/diogoalmiro/webfocus#readme",
+  "directories": {
+    "test": "test"
   }
 }
