@@ -151,7 +151,8 @@ class WebfocusApp {
         })
 
         let tray = new Tray(join(__dirname, 'static', 'favicon.ico'), [
-            this.name,
+            this.configuration.name,
+            "-",
             {text: "Stats", callback: () => { console.log(tray) }},
             {text: "Open", callback: () => {} },
             {text: "Quit", callback: () => { server.close() } }
