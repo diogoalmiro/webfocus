@@ -160,7 +160,7 @@ class WebfocusApp {
         let tray = new Tray(join(__dirname, 'static', 'favicon.ico'), [
             this.configuration.name,
             "-",
-            {text: "Open", callback: () => { open(`http://localhost:${server.addr().port}/`)} },
+            {text: "Open", callback: () => { open(`http://localhost:${server.address().port}/`)} },
             {text: "Quit", callback: () => { server.close() } }
         ]);
         server.on("close", _ => tray.stop() );
