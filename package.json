@@ -12,7 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "appdata-path": "^1.0.0",
-    "ctray": "^0.0.5",
+    "ctray": "^0.0.6",
     "debug": "^2.6.9",
     "express": "^4.17.1",
     "open": "^8.0.5",
