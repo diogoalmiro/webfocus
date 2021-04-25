@@ -22,6 +22,7 @@ mkdirSync(folder, {recursive:true});
 const DEFAULT_VALUES = {
     port: 0,
     name: "Default Application Name",
+    dirname: path.join(__dirname, 'views'),
     components: []
 }
 
@@ -70,7 +71,7 @@ class WebfocusApp {
         
         app.set('json spaces', 2);
         app.set('view engine', 'pug');
-        app.set('views', path.join(__dirname,'views'))
+        app.set('views', this.configuration.dirname)
         
         // Main express api middleware
         this.api = express.Router();
