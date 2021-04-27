@@ -10,7 +10,6 @@ const warn = debugp('webfocus:app:warning');
 warn.enabled = true;
 const appDataPath = require('appdata-path');
 const {mkdirSync} = require("fs");
-const Tray = require("ctray");
 const { join } = require('path');
 const folder = appDataPath('webfocus-app');
 const open = require("open");
@@ -155,16 +154,8 @@ class WebfocusApp {
         
         let server = this.app.listen(this.configuration.port, () => {
             let addr = server.address()
-            tray.start();
             debug("Server listenning on port %s", addr.port);
         });
-        let tray = new Tray(join(__dirname, 'static', 'favicon.ico'), [
-            this.configuration.name,
-            "-",
-            {text: "Open", callback: () => { open(`http://localhost:${server.address().port}/`)} },
-            {text: "Quit", callback: () => { server.close() } }
-        ]);
-        server.on("close", _ => tray.stop() );
         return server;
     }
     
