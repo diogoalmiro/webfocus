@@ -1,6 +1,6 @@
 {
   "name": "@webfocus/app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "(WIP) Main webfocus generic application. Allows the creation of specific applications given some requirements.",
   "main": "app.js",
   "scripts": {
