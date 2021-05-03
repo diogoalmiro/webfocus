@@ -192,6 +192,7 @@ class WebfocusApp {
             let pObj = this.pugObj({
                 apibaseurl: `/api/${component.urlname}/`,
                 componentbaseurl: `/${component.urlname}/`,
+                component,
                 req, 
                 basedir: this.app.get('views')
             });

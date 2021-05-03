@@ -20,6 +20,8 @@ function testComponent(){
         next(new Error("Some random error"));
     })
 
+    component.context = Math.random();
+
     return component;
 }
 describe("Test application", function(){
@@ -96,6 +98,17 @@ describe("Test application", function(){
             .expect(200)
             .end(function(err, res){
                 assert(res.text.match("Index test pug file"))
+                done()
+            })
+    })
+
+    it("should have context access", function(done){
+        request(baseurl)
+            .get(`/${component.urlname}/`)
+            .expect('Content-Type', /html/)
+            .expect(200)
+            .end(function(err, res){
+                assert(res.text.match("("+component.context+")"))
                 done()
             })
     })
