@@ -170,7 +170,7 @@ class WebfocusApp {
             return false;
         }
         if( component.urlname in this.components ){
-            warn("Ignoring component with the same urlname as a previous component.");
+            warn("Ignoring component with the same urlname as a previous component. (component: %s)", component.urlname);
             return false;
         }
         debug("Registering component \"%s\"", component.urlname);
@@ -203,7 +203,7 @@ class WebfocusApp {
                         next(err);
                     }
                     else if( err.message.indexOf("Failed to lookup") >= 0 ){
-                        component.debug("Component specific view does not exit, using index.pug");
+                        component.debug("Component specific view (%s) does not exit, using index.pug.", subpath);
                         res.render(path.join(component.dirname, 'index'), pObj);
                     }
                     else{

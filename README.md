@@ -6,7 +6,9 @@
 
 **WARNING**: This is an work in progress module, use a your own risk.
 
-This module defines two simple classes to help in the creation of NodeJS servers.
+This module defines two simple classes to help in the creation of NodeJS servers using [express](https://expressjs.com/) and [Pug](https://pugjs.org/).
+
+The main idea of this module is to enable the creation of independet components with the `WebfocusComponent` class and the creation of servers `WebfocusApp`'s using them.
 
 The `WebfocusApp` creates an express server internaly.
 Allows you to register specific components to the server.
@@ -24,12 +26,10 @@ Or access the class with `const WebfocusComponent = require('@webfocus/app/compo
 
 ## Usage
 
-### Simple Usage
-
 ```javascript
 let WebfocusApp = require('@webfocus/app');
 
-let webfocusApp = new WebfocusApp( );
+let webfocusApp = new WebfocusApp(options);
 
 webfocusApp.registerComponent(webfocusComponentInstance1);
 webfocusApp.registerComponent(webfocusComponentInstance2);
