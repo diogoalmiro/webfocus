@@ -22,6 +22,7 @@ const DEFAULT_VALUES = {
     port: 0,
     name: "Default Application Name",
     dirname: path.join(__dirname, 'views'),
+    static: path.join(__dirname, 'static'),
     components: []
 }
 
@@ -135,7 +136,7 @@ class WebfocusApp {
         })
 
         // Serve static files under the static folder
-        this.app.use(express.static(path.join(__dirname, 'static')));
+        this.app.use(express.static(this.configuration.static));
 
         this.app.get("*", (req, res, next) => { // Not found handling
             debug("Not Found Handler (%s)", req.path);
