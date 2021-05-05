@@ -27,3 +27,11 @@ If any of the following keys are defined in the configuration they **will be ign
 
   Will contain the `urlname`s of components registered in this instance. 
 </details>
+
+The constructor registers two handlers for the http GET requests `/` and `/api/`.
+
+ - `/` will use pug to render the file at `${configuration.dirname}/layouts/index.pug`.
+
+ - `/api/` will return a json list with the `urlname`s registered in this instance.
+ It enables `application/json` and `application/x-www-form-urlencoded` http communication for subpaths of `/api/` (access to `req.body` on the component middleware).
+ To upload files (`multipart/form-data`) use `mutler` on specific comonents.
