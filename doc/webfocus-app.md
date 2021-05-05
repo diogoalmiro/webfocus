@@ -17,13 +17,13 @@ const DEFAULT_VALUES = {
 If any of the following keys are defined in the configuration they **will be ignored**:
 
 <details>
-  <summary>`app-directory`</summary>
+  <summary><code>app-directory</code></summary>
 
    Will contain the path to a folder created (with the help of [appdata-path](https://www.npmjs.com/package/appdata-path)) `${require('appdata-path')('webfocus-app')}/${configuration.name}/`.
 </details>
 
 <details>
-  <summary>`components`</summary>
+  <summary><code>components</code></summary>
 
   Will contain the `urlname`s of components registered in this instance. 
 </details>

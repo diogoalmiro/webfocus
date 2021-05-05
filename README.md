@@ -13,12 +13,12 @@ The main idea of this module is to enable the creation of independet components 
 The `WebfocusApp` creates an express server internaly.
 Allows you to register specific components to the server.
 To use it `const WebfocusApp = require('@webfocus/app');`.
-[More information of WebfocusApp.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-component.md)
+[More information of WebfocusApp.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-app.md)
 
 The `WebfocusComponent` represents a specific component.
 To create a new component `const webfocusComponentInstance = require('@webfocus/app/component')(name: String, description: String)`.
 Or access the class with `const WebfocusComponent = require('@webfocus/app/component').WebfocusComponent` with the constructor `new WebfocusComponent(name: String, description: String, dirname: String);`.
-[More information of WebfocusComponents.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-component.md)
+[More information of WebfocusComponent.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-component.md)
 
 ## Installation
 
