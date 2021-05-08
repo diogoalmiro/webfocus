@@ -34,11 +34,15 @@ If any of the following keys are defined in the configuration they **will be ign
 
 The constructor registers two handlers for the http GET requests `/` and `/api/`.
 
- - `/` will use pug to render the file at `${configuration.dirname}/layouts/index.pug`.
+ - `/` will use pug to render the file at `layouts/index.pug`.
 
  - `/api/` will return a json list with the `urlname`s registered in this instance.
  It enables `application/json` and `application/x-www-form-urlencoded` http communication for subpaths of `/api/` (access to `req.body` on the component middleware).
- To upload files (`multipart/form-data`) use `mutler` on specific comonents.
+ To upload files (`multipart/form-data`) you can use `mutler` or any other implementation on specific comonents.
+
+`dirname` is used to find views layouts. If you change the default directory you should at least implment a `layouts/index.pug`, `layouts/error.pug` and `layouts/main.pug` files inside that directory.
+
+`static` is used to send static files, when everything else failed.
 
  ## `webfocusApp#registerComponent(component : WebfocusComponent) : boolean`
 
@@ -100,6 +104,29 @@ It defines the final handlers for requests if there was an error or there was no
  
  - Makes `/api/` return 404 or 500 (if `next` was called with an error).
  - Tries to send files statically from `configuration.static` folder.
- - Returns 404 for GET requests and make pug render 'layouts/error.pug'.
- - Returns 400 for other method requests and makes pug render 'layouts/error.pug'.
- - Returns 500 if an error occured and makes pug render 'layouts/error.pug'.
+ - Returns 404 for GET requests and make pug render `layouts/error.pug`.
+ - Returns 400 for other method requests and makes pug render `layouts/error.pug`.
+ - Returns 500 if an error occured and makes pug render `layouts/error.pug`.
+
+## `webfocusApp#pugObj( obj : Object ) : Object`
+
+**Used internally when rendering with pug.**
+
+Creates an object to be used by pug when rendering any file.
+
+It adds the the keys `configuration` and `getComponent` to the object recieved.
+
+ - `configuration` is the webfocusApp configuration.
+
+ - `getComponent(urlname : String) : {urlname: string, name: string, description: string}`
+
+Any render will have the `req` object, representing the express request. 
+
+Error renders (`layouts/error.pug`) will also have a `error: string` and optionaly a `stack: string`.
+
+Component specific renders will have the following keys:
+ 
+ - `apibaseurl = "/api/<componen.urlname>/"`
+ - `componentbaseurl = "/<componen.urlname>/"`
+ - `component = component` (The specific `WebfocusComponent` instance)
+ - `basedir = configuration.dirname` (To enable component to `extends /layouts/main.pug`)
