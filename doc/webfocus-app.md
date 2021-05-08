@@ -103,6 +103,7 @@ Starts the server listening to the port specified in configuration.
 It defines the final handlers for requests if there was an error or there was no handler for the request.
 
 Method | Request Path | Response Status |  Sends
+--- | --- | --- | ---
 Any | `/api/*` | `404` or `500` | JSON: `{ error: string, stack?: string }`
 Any | `*` | 200 | Files from `configuration.static` folder
 GET | `*` | 404 | Render of `layouts/error.pug`
