@@ -101,12 +101,12 @@ Emits `name` with `...obj` to all registered components.
 Starts the server listening to the port specified in configuration.
 
 It defines the final handlers for requests if there was an error or there was no handler for the request.
- 
- - Makes `/api/` return 404 or 500 (if `next` was called with an error).
- - Tries to send files statically from `configuration.static` folder.
- - Returns 404 for GET requests and make pug render `layouts/error.pug`.
- - Returns 400 for other method requests and makes pug render `layouts/error.pug`.
- - Returns 500 if an error occured and makes pug render `layouts/error.pug`.
+
+Method | Request Path | Response Status |  Sends
+Any | `/api/*` | `404` or `500` | JSON: `{ error: string, stack?: string }`
+Any | `*` | 200 | Files from `configuration.static` folder
+GET | `*` | 404 | Render of `layouts/error.pug`
+Any | `*` | 400 or 500 | Render of `layouts/error.pug`
 
 ## `webfocusApp#pugObj( obj : Object ) : Object`
 
@@ -118,7 +118,7 @@ It adds the the keys `configuration` and `getComponent` to the object recieved.
 
  - `configuration` is the webfocusApp configuration.
 
- - `getComponent(urlname : String) : {urlname: string, name: string, description: string}`
+ - `getComponent(urlname : String) : {urlname: string, name: string, description: string}` (From a the `WebfocusComponent`)
 
 Any render will have the `req` object, representing the express request. 
 
@@ -126,7 +126,7 @@ Error renders (`layouts/error.pug`) will also have a `error: string` and optiona
 
 Component specific renders will have the following keys:
  
- - `apibaseurl = "/api/<componen.urlname>/"`
- - `componentbaseurl = "/<componen.urlname>/"`
+ - `apibaseurl = "/api/${component.urlname}/"`
+ - `componentbaseurl = "/${component.urlname}/"`
  - `component = component` (The specific `WebfocusComponent` instance)
- - `basedir = configuration.dirname` (To enable component to `extends /layouts/main.pug`)
+ - `basedir = webfocusApp.configuration.dirname` (To enable component to `extends /layouts/main.pug`)
