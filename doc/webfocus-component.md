@@ -16,7 +16,7 @@ const component = require("@webfocus/app/component")("Component Name", "Componen
 module.exports = component;
 ```
 
-## Simple Structure
+## Structure
 
 Within the component folder there should be at least `index.js` or the main file in the `package.json`.
 
@@ -42,7 +42,7 @@ Variable | type | Content
 `configuration` | `object` | `webfocusApp.configuration`
 `getComponent` | `function` | `webfocusApp.getComponent` (adapted to return only `{name, urlname, description}` of another component)
 
-## `createComponent(name: string, description: string)`
+## `createComponent(name: string, description: string) : WebfocusComponent`
 
 This is the default export and it simply call the `WebfocusComponent` constructor using the current directory `new WebfocusComponent(name, description, __dirname)`.
 
