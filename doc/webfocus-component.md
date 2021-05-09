@@ -11,9 +11,18 @@ The [`main` file](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#mai
 const component = require("@webfocus/app/component")("Component Name", "Component Description");
 
 // Define Server Side Behavior with component.app
-// component.app.get("/", (req, res, next) => res.json(`Hello from ${component.name} API`))
+// For instance: 
+component.app.get("/", (req, res, next) => res.json(`Hello from ${component.name} API`))
 
 module.exports = component;
+```
+
+Using destructuring:
+
+```javascript
+const {app} = module.exports = require("@webfocus/app/component")("Component Name", "Component Description");
+
+app.get("/", (req, res, next) => res.json(`Hello from ${component.name} API`))
 ```
 
 ## Structure
