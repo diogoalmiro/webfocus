@@ -50,8 +50,8 @@ The constructor registers two handlers for the http GET requests `/` and `/api/`
 
  Registers he following handlers:
 
-  - `/api/${component.urlname}` to use the component.app middleware.
-  - `/${component.urlname}` for GET requests to serve statically the files in `component.componentFolder` and `component.dirname` or render the files within `component.dirname` with pug.
+  - `/api/${component.urlname}` to use the `component.app` middleware.
+  - `/${component.urlname}` to use the `component.staticApp` middleware and render pug files within `component.dirname`. It usually try to serve files staticaly from `component.componentFolder` and `component.dirname`.
 
 Example, a component with the following structure
 

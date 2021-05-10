@@ -48,6 +48,7 @@ class WebfocusComponent extends EventEmitter {
         this.name = name;
         this.urlname = name.replace(/\s+/g, '-').toLowerCase();
         this.app = express.Router();
+        this.staticApp = express.Router();
         this.description = description;
         this.debug = debug(`webfocus:component:${this.urlname}`);
 
@@ -76,6 +77,9 @@ class WebfocusComponent extends EventEmitter {
                 warn("Ignoring setting configuration more than once");
             })
         })
+
+        this.staticApp.use(express.static(this.componentFolder))
+        this.staticApp.use(express.static(this.dirname))
     }
 }
 

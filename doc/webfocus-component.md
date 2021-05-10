@@ -29,9 +29,8 @@ app.get("/", (req, res, next) => res.json(`Hello from ${component.name} API`))
 
 Within the component folder there should be at least `index.js` or the main file in the `package.json`.
 
-A webfocusApp will add the middleware `component.app` to handle `/api/${component.urlname}/` requests.
+A webfocusApp will add the middleware `component.app` to handle `/api/${component.urlname}/` requests, and the middleware `component.staticApp` to handle `/${component.urlname}/` requests, by default it tries to:
 
-For `/${component.urlname}/:subpath(*)?` `GET` requests it will try to:
  1. Statically serve files from `component.componentFolder`
  2. Statically serve files from `component.dirname`
  3. Render `path.join(component.dirname, subpath)` allways with the `basedir` of `webfocusApp.app.get('views')`.
@@ -64,6 +63,8 @@ The properties can be extended and modified by the creator of an specific compon
  - `name` from the constructor argument
  - `urlname` "kebab case" of `name`
  - `app` is the express middleware to handle `/api/${component.urlname}/` requests
+ - `staticApp` is the express middleware to handle `/${component.urlname}/` requests
+   - By default it tries to serve staticaly the `component.componentFolder` and `component.dirname` to disable this behavior overwrite it with a new router: `component.staticApp = express.Router()`.
  - `description` from the constructor argument
  - `debug` function to debug with the namespace `webfocus:component:${component.urlname}`
  - `componentFolder` path to a folder created (with the help of [appdata-path](https://www.npmjs.com/package/appdata-path)) `${require('appdata-path')('webfocus-component')}/${component.urlname}/`.

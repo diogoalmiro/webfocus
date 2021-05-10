@@ -182,10 +182,10 @@ class WebfocusApp {
         this.api.use(`/${component.urlname}`, component.app);
 
         // STATIC FILES
-        this.app.use(`/${component.urlname}`, express.static(component.componentFolder));
-        this.app.use(`/${component.urlname}`, express.static(component.dirname));
-        this.app.get(`/${component.urlname}/:subpath(*)?`, (req, res, next) => {
-            let subpath = path.join("/", req.params.subpath || "");
+        this.app.use(`/${component.urlname}`, component.staticApp, (req, res, next) => {
+            if( req.method !== 'GET' && req.method !== 'HEAD' ) next();
+            let subpath = req.path;
+
             if( subpath.endsWith("/") ){
                 subpath += "index";
             }
