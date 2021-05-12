@@ -1,6 +1,6 @@
 {
   "name": "@webfocus/app",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "[Work in Progress] This module defines two simple classes to help in the creation of NodeJS servers using express and Pug.",
   "main": "app.js",
   "scripts": {
@@ -11,7 +11,6 @@
   "author": "diogoalmiro",
   "license": "MIT",
   "dependencies": {
-    "appdata-path": "^1.0.0",
     "debug": "^2.6.9",
     "express": "^4.17.1",
     "open": "^8.0.5",

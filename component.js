@@ -9,10 +9,6 @@ warn.enabled = true;
 const path = require("path");
 const { statSync, mkdirSync } = require("fs");
 const EventEmitter = require("events").EventEmitter;
-const appDataPath = require("appdata-path");
-
-const folder = appDataPath('webfocus-components');
-mkdirSync(folder, {recursive:true});
 
 const EMPTY = new Object();
 
@@ -51,12 +47,6 @@ class WebfocusComponent extends EventEmitter {
         this.staticApp = express.Router();
         this.description = description;
         this.debug = debug(`webfocus:component:${this.urlname}`);
-
-        // Create app folder 
-        let componentFolder = path.join(folder, this.urlname);
-        mkdirSync(componentFolder, {recursive:true});
-        this.debug("Created directory %s", componentFolder)
-        this.componentFolder = componentFolder; 
         this.dirname = dirname;
         let config = EMPTY;
         this.configuration = new Proxy({}, {
@@ -77,8 +67,6 @@ class WebfocusComponent extends EventEmitter {
                 warn("Ignoring setting configuration more than once");
             })
         })
-
-        this.staticApp.use(express.static(this.componentFolder))
         this.staticApp.use(express.static(this.dirname))
     }
 }

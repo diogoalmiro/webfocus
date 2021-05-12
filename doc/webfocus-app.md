@@ -21,12 +21,6 @@ Using `port == 0` will make the app listen to any available port. You can check 
 If any of the following keys are defined in the configuration they **will be ignored**:
 
 <details>
-  <summary><code>app-directory</code></summary>
-
-   Will contain the path to a folder created (with the help of [appdata-path](https://www.npmjs.com/package/appdata-path)) `${require('appdata-path')('webfocus-app')}/${configuration.name}/`.
-</details>
-
-<details>
   <summary><code>components</code></summary>
 
   Will contain the `urlname`s of components registered in this instance. 
@@ -51,7 +45,7 @@ The constructor registers two handlers for the http GET requests `/` and `/api/`
  Registers he following handlers:
 
   - `/api/${component.urlname}` to use the `component.app` middleware.
-  - `/${component.urlname}` to use the `component.staticApp` middleware and render pug files within `component.dirname`. It usually try to serve files staticaly from `component.componentFolder` and `component.dirname`.
+  - `/${component.urlname}` to use the `component.staticApp` middleware and render pug files within `component.dirname`. It usually try to serve files staticaly from `component.dirname`.
 
 Example, a component with the following structure
 

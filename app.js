@@ -8,10 +8,6 @@ const debugp = require('debug');
 const debug = debugp('webfocus:app');
 const warn = debugp('webfocus:app:warning');
 warn.enabled = true;
-const appDataPath = require('appdata-path');
-const {mkdirSync} = require("fs");
-const folder = appDataPath('webfocus-app');
-mkdirSync(folder, {recursive:true});
 
 /**
  * Object that defines default properties for the {@link WebfocusApp}
@@ -53,13 +49,6 @@ class WebfocusApp {
             warn("Ignoring components property of configuration");
             this.configuration.components = []; 
         }
-        if( "app-directory" in this.configuration ){
-            warn("Ignoring \"app-directory\" value in configuration.")
-        }
-        // Create app folder 
-        let appFolder = this.configuration["app-directory"] = path.join(folder, this.configuration.name.replace(/\s+/g, '-').toLowerCase());
-        mkdirSync(appFolder, {recursive:true});
-        debug("Created directory %s", appFolder)
 
         this.components = {};
         this.started = false;
