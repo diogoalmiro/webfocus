@@ -10,9 +10,7 @@ const warn = debugp('webfocus:app:warning');
 warn.enabled = true;
 const appDataPath = require('appdata-path');
 const {mkdirSync} = require("fs");
-const { join } = require('path');
 const folder = appDataPath('webfocus-app');
-const open = require("open");
 mkdirSync(folder, {recursive:true});
 
 /**
