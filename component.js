@@ -73,7 +73,7 @@ class WebfocusComponent extends EventEmitter {
 
 /**
  * Creates an WebfocusComponent. Hides the need to pass __dirname explicitaly.
- * @param {String} name - Name to crete the component.
+ * @param {String} name - Name to create the component.
  * @param {String} description - Description of the component.
  */
 module.exports = function createComponent(name, description){

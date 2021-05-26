@@ -38,3 +38,9 @@ webfocusApp.registerComponent(webfocusComponentInstanceN);
 
 webfocusApp.start();
 ```
+
+## TODO
+ 
+ - Create an WebfocusComponent addon to enable distribution of a heavy process
+
+ - Create an pug addon to enable pagination over lists
