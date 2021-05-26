@@ -4,10 +4,8 @@
  */
 const express = require("express");
 const debug = require("debug");
-const warn = debug('webfocus:component:warning');
-warn.enabled = true;
 const path = require("path");
-const { statSync, mkdirSync } = require("fs");
+const { statSync } = require("fs");
 const EventEmitter = require("events").EventEmitter;
 
 const EMPTY = new Object();
@@ -47,6 +45,8 @@ class WebfocusComponent extends EventEmitter {
         this.staticApp = express.Router();
         this.description = description;
         this.debug = debug(`webfocus:component:${this.urlname}`);
+        const warn = debug(`webfocus:component:${this.urlname}:warning`);
+        warn.enabled = true;
         this.dirname = dirname;
         let config = EMPTY;
         this.configuration = new Proxy({}, {
