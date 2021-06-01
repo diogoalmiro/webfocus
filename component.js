@@ -8,8 +8,6 @@ const path = require("path");
 const { statSync } = require("fs");
 const EventEmitter = require("events").EventEmitter;
 
-const EMPTY = new Object();
-
 function isString(val){
     return typeof val === 'string' || val instanceof String;
 }
@@ -48,6 +46,7 @@ class WebfocusComponent extends EventEmitter {
         const warn = debug(`webfocus:component:${this.urlname}:warning`);
         warn.enabled = true;
         this.dirname = dirname;
+        let EMPTY = Symbol("EMPTY");
         let config = EMPTY;
         this.configuration = new Proxy({}, {
             set: (obj, prop, value) => {
