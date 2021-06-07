@@ -1,8 +1,3 @@
-class InvalidParameters extends Error {
-    constructor(str){
-        super("Invalid Parameters: "+str)
-    }
-}
 /**
  * Creates a middleware router to handle pagination requests over a list
  * @param {*} listGetter function that returns the list

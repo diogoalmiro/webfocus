@@ -49,17 +49,26 @@ window.addEventListener('load', () => {
         }
         
         getJSON(`${url}?start=${start}&end=${start+step}`).then( ({pages, previous, next, error, length, start, end}) => {
+            let currentSearch = new URLSearchParams(window.location.search);
+            let previousSearch = new URLSearchParams(previous);
+            let nextSearch = new URLSearchParams(next);
+            currentSearch.set('start', previousSearch.get('start'))
+            currentSearch.set('end', previousSearch.get('end'))
+            let previousSearchUrl = '?'+currentSearch.toString()
+            currentSearch.set('start', nextSearch.get('start'))
+            currentSearch.set('end', nextSearch.get('end'))
+            let nextSearchUrl = '?'+currentSearch.toString() 
             document.querySelectorAll("[data-pagination-error]").forEach( elem => elem.textContent = error )
             document.querySelectorAll("[data-pagination-length]").forEach( elem => elem.textContent = length )
             document.querySelectorAll("[data-pagination-start]").forEach( elem => elem.textContent = start )
             document.querySelectorAll("[data-pagination-end]").forEach( elem => elem.textContent = end )
             document.querySelectorAll("[data-pagination-previous]").forEach( a => {
                 a.textContent = "Previous";
-                a.href = previous
+                a.href = previousSearchUrl
             });
             document.querySelectorAll("[data-pagination-next]").forEach( a => {
                 a.textContent = "Next";
-                a.href = next
+                a.href = nextSearchUrl
             });
             let template = n.querySelector("template");
             pages.map(entry => {
