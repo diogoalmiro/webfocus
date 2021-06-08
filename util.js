@@ -1,13 +1,13 @@
 /**
  * Creates a middleware router to handle pagination requests over a list
- * @param {*} listGetter function that returns the list
- * @param {*} filter function to filter specific elements
- * @param {*} map function to map specific elements
+ * @param {(http.IncommingMessage) => [any]} listGetter function that returns the list
+ * @param {(any, int, [any]) => bool} filter function to filter specific elements
+ * @param {(any, int, [any]) => any} map function to map specific elements
  * @returns {(express.Request, express.Response, express.Next) => void} Middleware handle
  *          Request is expectedd to have in the query a value for start and end
  */
-module.exports.pagination = (listGetterPromise, filter=() => true, map=a => a, step=20) => {
-    return async (req, res, next) => {
+module.exports.pagination = (listGetterPromise, filter=null, map=null, step=20) => {
+    return async (req, res) => {
         let errors = []
         let error = 400;
         // Requets parameters
@@ -22,8 +22,10 @@ module.exports.pagination = (listGetterPromise, filter=() => true, map=a => a, s
             qstart = 0;
             qend = qstart + step
         }
-
-        let list = (await listGetterPromise().catch(e => {errors.push(e.message); error=500; return []})).filter(filter);
+        
+        let catchFun = e => {errors.push(e.message); error=500; return []};
+        let pGetter = listGetterPromise(req).catch(catchFun);
+        let list = filter ? (await pGetter).filter(filter) : (await pGetter);
         if( qend > list.length ){
             errors.push(`"end" must be smaller than list length. end=${qend} length=${list.length}`)
             qend = list.length
@@ -41,9 +43,12 @@ module.exports.pagination = (listGetterPromise, filter=() => true, map=a => a, s
         if( nstart >= list.length || nstart + step > list.length ) nstart = list.length - step;
         let nend = nstart + step;
         let nextQuery = `?start=${nstart}&end=${nend}`;
-
+        let pages = list.slice(qstart, qend);
+        if( map ){
+            pages = await Promise.all(pages.map(map));
+        }
         res.status(errors.lentgh > 0 ? error:200).json({
-            pages : await Promise.all(list.slice(qstart, qend).map(map)),
+            pages,
             start: qstart,
             end: qend,
             previous : previousQuery,
