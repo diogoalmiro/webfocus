@@ -39,8 +39,8 @@ webfocusApp.registerComponent(webfocusComponentInstanceN);
 webfocusApp.start();
 ```
 
+In the [repository](https://github.com/diogoalmiro/webfocus-cypress-tests) we do end-to-end tests with cypress tests on an sample implementation.
+
 ## TODO
  
  - Create an WebfocusComponent addon to enable distribution of a heavy process
-
- - Create an pug addon to enable pagination over lists
