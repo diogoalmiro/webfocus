@@ -1,6 +1,6 @@
 {
   "name": "@webfocus/app",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "[Work in Progress] This module defines two simple classes to help in the creation of NodeJS servers using express and Pug.",
   "main": "app.js",
   "scripts": {
