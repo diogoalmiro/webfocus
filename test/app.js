@@ -1,10 +1,14 @@
 const assert = require('assert');
 const request = require('supertest');
 const WebfocusApp = require('../app');
-const createComponent_ = require('../component');
 
 function createComponent(){
-	return createComponent_("Test Component", "Component used in the tests");
+	// Fake stub component
+	return {
+		urlname: "test-component",
+		app : (req, res, next) => {req.end()},
+		staticApp : (req, res, next) => {req.end()}
+	}
 }
 
 describe("WebfocusApp", function(){
