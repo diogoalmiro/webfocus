@@ -164,7 +164,10 @@ class WebfocusApp {
         debug("Registering component \"%s\"", component.urlname);
 
         this.components[component.urlname] = component;
-        this.configuration.components.push(component.urlname);
+        if( !component.hidden ){
+            this.configuration.components.push(component.urlname);
+        }
+
         // COMPONENT API
         this.api.use(`/${component.urlname}`, component.app);
 

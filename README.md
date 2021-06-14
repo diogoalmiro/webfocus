@@ -44,3 +44,4 @@ In the [repository](https://github.com/diogoalmiro/webfocus-cypress-tests) we do
 ## TODO
  
  - Create an WebfocusComponent addon to enable distribution of a heavy process
+ - Update documentation after splitted the project

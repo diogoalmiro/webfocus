@@ -1,6 +1,6 @@
 {
   "name": "@webfocus/app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "This module defines the WebfocusApp class to help in the creation of NodeJS servers using express and Pug.",
   "main": "app.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "open": "^8.0.5",
     "pug": "^3.0.2"
   },
-  "repository": "diogoalmiro/webfocus",
+  "repository": "webfocus-js/app",
   "devDependencies": {
     "mocha": "^8.3.2",
     "supertest": "^6.1.3"

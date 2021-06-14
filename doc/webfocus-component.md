@@ -8,7 +8,7 @@ A component can be defined simillarly as a NPM package.
 The [`main` file](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#main) should export an instance of `WebfocusComponent`:
 
 ```javascript
-const component = require("@webfocus/app/component")("Component Name", "Component Description");
+const component = require("@webfocus/component")("Component Name", "Component Description");
 
 // Define Server Side Behavior with component.app
 // For instance: 
@@ -20,7 +20,7 @@ module.exports = component;
 Using destructuring:
 
 ```javascript
-const {app} = module.exports = require("@webfocus/app/component")("Component Name", "Component Description");
+const {app} = module.exports = require("@webfocus/component")("Component Name", "Component Description");
 
 app.get("/", (req, res, next) => res.json(`Hello from ${component.name} API`))
 ```
@@ -53,7 +53,7 @@ Variable | type | Content
 
 This is the default export and it simply call the `WebfocusComponent` constructor using the current directory `new WebfocusComponent(name, description, __dirname)`.
 
-To acces the `WebfocusComponent` class:  `require("@webfocus/app/component").WebfocusComponent`.
+To acces the `WebfocusComponent` class:  `require("@webfocus/component").WebfocusComponent`.
 
 ### WebfocusComponent properties
 

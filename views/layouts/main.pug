@@ -1,10 +1,23 @@
-
 doctype html
 html.h-100
   head 
-    include head.pug
-    include bootstrap.pug
+    title Webfocus - #{configuration['name']}
 
+    link(rel="shortcut icon", href="favicon.ico", type="image/x-icon")
+
+    meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    
+    script const apibaseurl = "!{apibaseurl}";const componentbaseurl = "!{componentbaseurl}";
+    
+    // Bootstrap Dependency
+    link(rel="stylesheet", href="/css/bootstrap.min.css")
+    script(src="/js/bootstrap.min.js")
+
+    // Fetch JSON Dependency
+    script(src="/js/fetch.js") 
+
+    // Component specific headers
     block head
   
   body.d-flex.flex-column.h-100
