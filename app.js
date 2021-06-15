@@ -121,9 +121,13 @@ class WebfocusApp {
             debug("Error Api Handler on %s %s: %s", req.method, req.path, err.message);
             res.status(500).json({error: err.message, stack: err.stack})
         })
+        
+        // Ensure fetch.js is always available
+        this.app.get('/js/fetch.js', (_,res) => res.sendFile(path.join(__dirname, 'static','js','fetch.js')));
 
         // Serve static files under the static folder
         this.app.use(express.static(this.configuration.static));
+        
 
         this.app.get("*", (req, res, next) => { // Not found handling
             debug("Not Found Handler (%s)", req.path);

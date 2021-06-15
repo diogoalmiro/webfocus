@@ -177,6 +177,22 @@ describe("WebfocusApp", function(){
 				});
 		})
 
+		it("should send fetch.js file", function(done){
+			let configuration = { port: 0, name: "Test app" };
+			let webfocusApp = new WebfocusApp(configuration);
+
+			let server = webfocusApp.start();
+
+			request(`http://localhost:${server.address().port}`)
+				.get("/js/fetch.js")
+				//.expect('Content-Type', /javascript/)
+				.expect(200)
+				.then(function(res){
+					assert(res.text.indexOf('requestJSON') != -1)
+					server.close();
+					done();
+				})
+		})
 	})
 
 	describe("#... (methods)", function(){

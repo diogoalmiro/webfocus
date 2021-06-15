@@ -4,25 +4,26 @@
 
 # Webfocus
 
-**WARNING**: This is an work in progress module, use a your own risk.
+This module defines the WebfocusApp class to help in the creation of NodeJS servers using [express](https://expressjs.com/) and [Pug](https://pugjs.org/).
 
-This module defines two simple classes to help in the creation of NodeJS servers using [express](https://expressjs.com/) and [Pug](https://pugjs.org/).
+The main idea of this module is to enable the creation of independet components with the `WebfocusComponent` class [(see @webfocus/component)](https://www.npmjs.com/package/@webfocus/component) and the creation of applications with `WebfocusApp` class using said components.
 
-The main idea of this module is to enable the creation of independet components with the `WebfocusComponent` class and the creation of servers `WebfocusApp`'s using them.
-
-The `WebfocusApp` creates an express server internaly.
+Specifically, the `WebfocusApp` creates an express server internaly.
 Allows you to register specific components to the server.
 To use it `const WebfocusApp = require('@webfocus/app');`.
-[More information of WebfocusApp.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-app.md)
+[More information of the WebfocusApp.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-app.md)
 
-The `WebfocusComponent` represents a specific component.
-To create a new component `const webfocusComponentInstance = require('@webfocus/app/component')(name: String, description: String)`.
-Or access the class with `const WebfocusComponent = require('@webfocus/app/component').WebfocusComponent` with the constructor `new WebfocusComponent(name: String, description: String, dirname: String);`.
-[More information of WebfocusComponent.](https://github.com/diogoalmiro/webfocus/blob/main/doc/webfocus-component.md)
+## Getting Started
 
-## Installation
+On your current project:
 
 `npm install @webfocus/app`
+
+Or use the initializer:
+
+`npm init @webfocus/app`
+
+The later will create a template WebfocusApp (the `package.json` and `index.js` files)
 
 ## Usage
 
@@ -39,9 +40,4 @@ webfocusApp.registerComponent(webfocusComponentInstanceN);
 webfocusApp.start();
 ```
 
-In the [repository](https://github.com/diogoalmiro/webfocus-cypress-tests) we do end-to-end tests with cypress tests on an sample implementation.
-
-## TODO
- 
- - Create an WebfocusComponent addon to enable distribution of a heavy process
- - Update documentation after splitted the project
+In the [repository](https://github.com/webfocus-js/cypress-tests) we do end-to-end tests with cypress tests on an sample implementation.

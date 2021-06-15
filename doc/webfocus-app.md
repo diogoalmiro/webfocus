@@ -4,7 +4,7 @@
 
 Creates an instance of WebfocusApp.
 
-The configuration is optional and extends the following values:
+The `configuration` object is optional and extends the values:
 
 ```javascript
 {
@@ -12,31 +12,30 @@ The configuration is optional and extends the following values:
     name: "Default Application Name",
     dirname: path.join(__dirname, 'views'),
     static: path.join(__dirname, 'static'),
+    components: []
 }
 ```
 
-If an invalid `port` is given it is changed to 0.
-Using `port == 0` will make the app listen to any available port. You can check the port after starting the server: `app.start().address().port`.
+### Notes
 
-If any of the following keys are defined in the configuration they **will be ignored**:
+ - If an invalid `port` is given it is changed to 0.
+ Using `port == 0` will make the app listen to any available port. You can check the port after starting the server: `app.start().address().port`.
 
-<details>
-  <summary><code>components</code></summary>
+ - The value of `components` is always replaced by an empty array. It is later be filled with the `urlname` of the components regitered.
 
-  Will contain the `urlname`s of components registered in this instance. 
-</details>
+ - `dirname` is the location used by `express` to render `pug` files. For more information on customizing the PUG Files see [Section Custom PUG Files](#custom-PUG-Files).
 
-The constructor registers two handlers for the http GET requests `/` and `/api/`.
+ - `static` is the location used by `express` to send static files.
+
+### Behavior
+
+The constructor registers two handlers for http GET requests to:
 
  - `/` will use pug to render the file at `layouts/index.pug`.
 
- - `/api/` will return a json list with the `urlname`s registered in this instance.
+ - `/api/` will return a json list with the `urlname`s registered in this application.
  It enables `application/json` and `application/x-www-form-urlencoded` http communication for subpaths of `/api/` (access to `req.body` on the component middleware).
  To upload files (`multipart/form-data`) you can use `mutler` or any other implementation on specific comonents.
-
-`dirname` is used to find views layouts. If you change the default directory you should at least implment a `layouts/index.pug`, `layouts/error.pug` and `layouts/main.pug` files inside that directory.
-
-`static` is used to send static files, when everything else failed.
 
  ## `webfocusApp#registerComponent(component : WebfocusComponent) : boolean`
 
@@ -125,3 +124,9 @@ Component specific renders will have the following keys:
  - `componentbaseurl = "/${component.urlname}/"`
  - `component = component` (The specific `WebfocusComponent` instance)
  - `basedir = webfocusApp.configuration.dirname` (To enable component to `extends /layouts/main.pug`)
+
+## Custom PUG Files
+
+This framework requires you to create a folder `layouts` with the files: `index.pug`, `error.pug` and `main.pug` if you change the default `dirname` value for a custom HTML.
+Specifically `main.pug` will be extended by the components registered to the application, this means that the file must define a space for be extended with `block main` and `block head` .
+To mantain a consistent look through the pages you could also make index.pug and error.pug extend from main.pug (just like any other component)
