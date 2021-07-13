@@ -1,6 +1,6 @@
 {
   "name": "@webfocus/app",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "This module defines the WebfocusApp class to help in the creation of NodeJS servers using express and Pug.",
   "main": "app.js",
   "scripts": {

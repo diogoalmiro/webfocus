@@ -178,7 +178,7 @@ class WebfocusApp {
         // STATIC FILES
         this.app.use(`/${component.urlname}`, component.staticApp, (req, res, next) => {
             debug("Component SSR Handler (%s %s)", req.method, req.path)
-            if( req.method !== 'GET' && req.method !== 'HEAD' ) next();
+            if( req.method !== 'GET' && req.method !== 'HEAD' ) return next();
             let subpath = req.path;
 
             if( subpath.endsWith("/") ){
