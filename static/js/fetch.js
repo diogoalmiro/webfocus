@@ -50,3 +50,30 @@ function postJSONmap(url,obj,map){
 function getJSONmap(url, map){
     return getJSON(url).then(elems => elems.map(map))
 }
+
+function loadScript(expectedGlobal, url, cb){
+    const SCRIPT_ID = expectedGlobal+'-load-script';
+    if( window[expectedGlobal] == null ){
+        let script = document.getElementById(SCRIPT_ID);
+        if( script == null ){
+            script = document.createElement("script");
+            script.id = SCRIPT_ID;
+            script.src = url;
+            script.fired = false;
+            script.addEventListener("load", () => {
+                script.fired = true;
+                cb();
+            })
+        }
+        else if(!script.fired){
+            script.addEventListener("load", () => {
+                script.fired = true;
+                cb();
+            })
+        }
+        else{
+            cb();
+        }
+    } 
+
+}
