@@ -54,9 +54,9 @@ function getJSONmap(url, map){
 function loadScript(expectedGlobal, url, cb){
     const SCRIPT_ID = expectedGlobal+'-load-script';
     if( window[expectedGlobal] == null ){
-        let script = document.getElementById(SCRIPT_ID);
+        let script = document.getElementById(SCRIPT_ID) || loadScript.scripts[SCRIPT_ID];
         if( script == null ){
-            script = document.createElement("script");
+            loadScript.scripts[SCRIPT_ID] = script = document.createElement("script");
             script.id = SCRIPT_ID;
             script.src = url;
             script.fired = false;
@@ -78,3 +78,4 @@ function loadScript(expectedGlobal, url, cb){
     } 
 
 }
+loadScript.scripts = {};
