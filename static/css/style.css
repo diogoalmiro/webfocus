@@ -30,6 +30,7 @@ header > #brand {
 header > #brand:before {
     content: '';
     background: url(/favicon.svg);
+    background-repeat: no-repeat;
     width: 40px;
     height: 40px;
     margin: 0.4em;
