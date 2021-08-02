@@ -1,0 +1,92 @@
+@import url('/webfocus-static/css/colors.css');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    color: var(--black-100);
+}
+
+a, a:hover, a:focus, a:visited {
+    color: inherit;
+    text-decoration: none;
+    outline: none;
+    color: var(--primary-300);
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-shadow: 0 0 10px -5px var(--black-300);
+}
+
+header > #brand {
+    display: flex;
+    align-items: center;
+    padding: 0.2em;
+}
+
+header > #brand:before {
+    content: '';
+    background: url(/favicon.svg);
+    width: 40px;
+    height: 40px;
+    margin: 0.4em;
+}
+
+header > nav {
+    display: flex;
+    margin: auto;
+    flex: 0 1 100%;
+}
+
+header > nav > ul {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    flex: 0 0 100%;
+}
+
+header > nav > ul > li {
+    display: block;
+    margin-top: auto;
+    margin: auto 0.8em 0 0.8em;
+}
+
+header > nav > ul > li > a {
+    padding: 0.8em 0.4em;
+    display: block;
+
+}
+
+header > nav > ul > li > a.active {
+    color: var(--primary-100);
+    position: relative;
+}
+
+a.active:after {
+    width: 100%;
+    height: 3px;
+    background: var(--primary-300);
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
+
+main {
+    display: block;
+    margin: 1em auto 2em;
+    width: fit-content;
+    min-width: 380px;
+    max-width: 100vw;
+    padding: 1em 2em;
+    box-shadow: 0 0 10px -5px var(--black-300);
+}
+
+footer {
+    padding: 1em;
+    box-shadow: 0 -5px 10px -10px var(--black-300);
+}

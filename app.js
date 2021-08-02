@@ -85,6 +85,7 @@ class WebfocusApp {
      */
     pugObj(objs){
         let obj = { ...objs };
+        obj.basedir = this.app.get('views');
         obj.configuration = this.configuration;
         obj.getComponent = (urlname) => {
             let c = this.getComponent(urlname);
@@ -122,8 +123,8 @@ class WebfocusApp {
             res.status(500).json({error: err.message, stack: err.stack})
         })
         
-        // Ensure fetch.js is always available
-        this.app.get('/js/fetch.js', (_,res) => res.sendFile(path.join(__dirname, 'static','js','fetch.js')));
+        // Ensure webfocus-static files are always available (such as fetch)
+        this.app.use('/webfocus-static/',express.static(path.join(__dirname, 'static')));
 
         // Serve static files under the static folder
         this.app.use(express.static(this.configuration.static));
@@ -135,7 +136,7 @@ class WebfocusApp {
         })
 
         this.app.all("*", (req, res, next) => { // Method Not Allowed handling
-            res.status(400).render(`layouts/error`, this.pugObj({req, error: `Method not allowed (${req.method})`}));
+            res.status(400).render('layouts/error', this.pugObj({req, error: `Method not allowed (${req.method})`}));
         })
         
         this.app.use((err, req, res, next) => { // Internal error handling
@@ -172,6 +173,8 @@ class WebfocusApp {
             this.configuration.components.push(component.urlname);
         }
 
+        component.emit("webfocusApp", this);
+
         // COMPONENT API
         this.api.use(`/${component.urlname}`, component.app);
 
@@ -193,8 +196,7 @@ class WebfocusApp {
                 apibaseurl: `/api/${component.urlname}/`,
                 componentbaseurl: `/${component.urlname}/`,
                 component,
-                req, 
-                basedir: this.app.get('views')
+                req
             });
             res.render(path.join(component.dirname, subpath), pObj, (err, html) => {
                 if( err ){

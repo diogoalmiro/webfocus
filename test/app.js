@@ -7,7 +7,8 @@ function createComponent(){
 	return {
 		urlname: "test-component",
 		app : (req, res, next) => {req.end()},
-		staticApp : (req, res, next) => {req.end()}
+		staticApp : (req, res, next) => {req.end()},
+		emit: (evt, ...obj) => {}
 	}
 }
 
@@ -143,7 +144,7 @@ describe("WebfocusApp", function(){
 
 	describe("#start", function(){
 
-		it("should send json on the root", function(done){
+		it("should send html on the root", function(done){
 			let configuration = { port: 0, name: "Test app" };
 			let webfocusApp = new WebfocusApp(configuration);
 

@@ -1,17 +1,19 @@
 extends ./main.pug 
 
-block main
-  mixin card(urlname)
-    - let c = getComponent(urlname);
-    .card.m-2
-      .card-body 
-        h5.card-title= c.name
-        p.card-text= c.description
-        a.card-link(href=c.urlname) Open
+block head
+  style.
+    p{
+      margin: 0 2em 0;
+    }
 
-  div
-    if configuration.components.length > 0
-      - for(let urlname of configuration.components)
-        +card(urlname)
-    else 
-      p No components added to this application.
+block main
+  if configuration.components.length > 0
+    mixin component(urlname)
+      - let c = getComponent(urlname);
+      div
+        h3: a(href=c.urlname)= c.name
+        p= c.description
+    - for(let urlname of configuration.components)
+      +component(urlname)
+  else 
+    p No components added to this application.

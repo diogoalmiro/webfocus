@@ -1,44 +1,30 @@
 doctype html
-html.h-100
+html
   head 
     title Webfocus - #{configuration['name']}
 
-    link(rel="shortcut icon", href="favicon.ico", type="image/x-icon")
+    link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
 
     meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    
-    script const apibaseurl = "!{apibaseurl}";const componentbaseurl = "!{componentbaseurl}";
-    
-    // Bootstrap Dependency
-    link(rel="stylesheet", href="/css/bootstrap.min.css")
-    script(src="/js/bootstrap.min.js")
 
-    // Fetch JSON Dependency
-    script(src="/js/fetch.js") 
+    link(rel="stylesheet", href="/css/style.css")
 
-    // Component specific headers
+    script(src="/webfocus-static/js/fetch.js")
+    
     block head
-  
-  body.d-flex.flex-column.h-100
-    nav.navbar.navbar-expand-md.navbar-light
-      div.container
-        a.navbar-brand(href="/").d-flex
-          img(src="/favicon.svg",width="60").mx-3
-          div.d-flex.flex-column
-            h1 Webfocus
-            h6.text-wrap= configuration.name
-        button.navbar-toggler.m-auto(type="button",data-bs-toggle="collapse",data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation")
-          span.navbar-toggler-icon
-        div#navbar.collapse.navbar-collapse
-          ul.navbar-nav.me-auto.mb-2
-            - let isCurr = (c) => componentbaseurl ? componentbaseurl.indexOf(c.urlname) >= 0 : false
-            mixin nava(component) 
-              - let klass = isCurr(component) ? 'nav-link active' : 'nav-link'
-              li.nav-item: a(href=`/${component.urlname}/`, class=klass)= component.name
-            - for(let path of configuration.components)
-              +nava(getComponent(path))
-    main.container.my-2
+  body
+    header
+      a#brand(href="/")= configuration.name
+      nav
+        ul
+          - let isCurr = (c) => componentbaseurl ? componentbaseurl.indexOf(c.urlname) >= 0 : false
+          mixin nava(component) 
+            - let klass = isCurr(component) ? 'active' : ''
+            li(class=klass): a(href=`/${component.urlname}/`, class=klass)= component.name
+          - for(let path of configuration.components)
+            +nava(getComponent(path))
+    main
       block main
-    footer.mt-auto
-      div.container Diogo Almiro 2021
+    footer
+      p Webfocus - !{configuration.name}
