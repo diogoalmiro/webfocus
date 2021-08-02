@@ -64,7 +64,7 @@ function loadScript(expectedGlobal, url, cb){
                 script.fired = true;
                 cb();
             })
-            document.addEventListener('load', () => document.body.append(script));
+            window.addEventListener('load', () => document.body.append(script));
         }
         else if(!script.fired){
             script.addEventListener("load", () => {
