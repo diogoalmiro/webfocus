@@ -24,7 +24,7 @@ html
             li(class=klass): a(href=`/${component.urlname}/`, class=klass)= component.name
           - for(let path of configuration.components)
             +nava(getComponent(path))
-    main.container
+    main
       block main
     footer
       p Webfocus - !{configuration.name}
