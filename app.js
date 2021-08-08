@@ -21,6 +21,15 @@ const DEFAULT_VALUES = {
 }
 
 /**
+ * Reserved names that cannot be used by a component
+ */
+const RESERVED_URLNAMES = [
+    "bootstrap",
+    "webfocus-static",
+    "popperjs"
+]
+
+/**
  * Class that allows the registration of components ({@link WebfocusComponent}) and creates a server.
  * 
  * To start the sever call {@link WebfocusApp.start} the server will listen on the {@link WebfocusApp.configuration.port}.
@@ -123,8 +132,10 @@ class WebfocusApp {
             res.status(500).json({error: err.message, stack: err.stack})
         })
         
-        // Ensure webfocus-static files are always available (such as fetch)
+        // Ensure webfocus-static, bootstrap and popper files are always available (such as fetch)
         this.app.use('/webfocus-static/',express.static(path.join(__dirname, 'static')));
+        this.app.use('/bootstrap/', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')))
+        this.app.use('/popperjs/', express.static(path.join(__dirname, 'node_modules', '@popperjs', 'core', 'dist')))
 
         // Serve static files under the static folder
         this.app.use(express.static(this.configuration.static));
@@ -164,6 +175,10 @@ class WebfocusApp {
         }
         if( component.urlname in this.components ){
             warn("Ignoring component with the same urlname as a previous component. (component: %s)", component.urlname);
+            return false;
+        }
+        if( RESERVED_URLNAMES.indexOf(component.urlname) >= 0 ){
+            warn("Ignoring component with a reserved urlname. (component: %s)", component.urlname);
             return false;
         }
         debug("Registering component \"%s\"", component.urlname);

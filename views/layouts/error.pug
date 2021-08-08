@@ -1,15 +1,4 @@
 extends ./main.pug
 
-block head
-  style.
-    main {
-      font-family: monospace;
-      background: var(--red-300);
-      border: 1px solid;
-      color: var(--red-100);
-      border-radius: 3px;
-      white-space: pre-wrap;
-    }
-
 block main
-  p= error
+  pre.alert.alert-danger= error
