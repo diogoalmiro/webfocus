@@ -135,8 +135,8 @@ class WebfocusApp {
         // Ensure webfocus-static, bootstrap and popper files are always available (such as fetch)
         this.app.use('/webfocus-static/',express.static(path.join(__dirname, 'static')));
     
-        this.app.use('/bootstrap/', express.static(path.join(path.dirname(require.resolve('bootstrap')), 'dist')))
-        this.app.use('/popperjs/', express.static(path.join(path.dirname(require.resolve('@popperjs/core')), 'dist')))
+        this.app.use('/bootstrap/', express.static(path.join(path.dirname(require.resolve('bootstrap/package.json')), 'dist')))
+        this.app.use('/popperjs/', express.static(path.join(path.dirname(require.resolve('@popperjs/core/package.json')), 'dist')))
 
         // Serve static files under the static folder
         this.app.use(express.static(this.configuration.static));
