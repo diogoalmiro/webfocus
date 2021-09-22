@@ -207,7 +207,6 @@ class WebfocusApp {
             if( subpath.indexOf('.') != -1 ){
                 subpath = subpath.replace(/\.[^\.]*$/,''); // Remove extension
             }
-            component.debug("Get handler (%s) %s", subpath, req.path);
             let pObj = this.pugObj({
                 apibaseurl: `/api/${component.urlname}/`,
                 componentbaseurl: `/${component.urlname}/`,
@@ -242,7 +241,6 @@ class WebfocusApp {
      * @returns {WebfocusComponent} The webfocus component instance with the given urlname.
      */
     getComponent(urlname){
-        debug("Getting component \"%s\".", urlname);
         let r = this.components[urlname];
         if( !r ){
             warn("Component \"%s\" not fount.", urlname)
