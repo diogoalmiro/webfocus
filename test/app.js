@@ -192,8 +192,6 @@ describe("WebfocusApp", function(){
 					assert(res.text.indexOf('requestJSON') != -1)
 					server.close();
 					done();
-
-					console.log(res.text)
 				})
 		})
 	})
