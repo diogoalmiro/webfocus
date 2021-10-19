@@ -16,8 +16,7 @@ const DEFAULT_VALUES = {
     port: 0,
     name: "Default Application Name",
     dirname: path.join(__dirname, 'views'),
-    static: path.join(__dirname, 'static'),
-    components: []
+    static: path.join(__dirname, 'static')
 }
 
 /**
@@ -54,10 +53,10 @@ class WebfocusApp {
         if( (typeof this.configuration.name !== 'string') && !(this.configuration.name instanceof String) ){
             warn("Unexpected Object \"name\" in configuration (%o)", configuration.name);
         }
-        if( this.configuration.components.length > 0 ){
+        if( this.configuration.components ){
             warn("Ignoring components property of configuration");
-            this.configuration.components = []; 
         }
+        this.configuration.components = []; 
 
         this.components = {};
         this.started = false;

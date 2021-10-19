@@ -1,15 +1,15 @@
 const assert = require('assert');
 const request = require('supertest');
 const WebfocusApp = require('../app');
+let EventEmitter = require("events").EventEmitter
 
 function createComponent(){
 	// Fake stub component
-	return {
-		urlname: "test-component",
-		app : (req, res, next) => {req.end()},
-		staticApp : (req, res, next) => {req.end()},
-		emit: (evt, ...obj) => {}
-	}
+	let c = new EventEmitter();
+	c.urlname= "test-component";
+	c.app = (req) => req.end();
+	c.staticApp = (req) => req.end();
+	return c;
 }
 
 describe("WebfocusApp", function(){
