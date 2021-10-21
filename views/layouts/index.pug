@@ -10,8 +10,8 @@ block main
   if configuration.components.length > 0
     mixin component(urlname)
       - let c = getComponent(urlname);
-      div
-        h3: a(href=c.urlname)= c.name
+      div.m-3.p-3.border.rounded
+        h3: a(href=c.urlname).text-decoration-none= c.name
         p= c.description
     - for(let urlname of configuration.components)
       +component(urlname)
